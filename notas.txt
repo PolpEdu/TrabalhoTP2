@@ -3,6 +3,9 @@ Futurework: o que era esperado se continuassemos a ressearch
 Paper 3 pages
 Pare 6 pages
 
-calcular entropia
-semana 4/5 
+calcular entropia e comprar entree os ficheiros(random.txt tem maior)
+
+encontrar 4 ou 5 algoritmos de codificação de texto e comparar qual deles é melhor para usar
+em codificação de texto.
+um deles É O HUFFMAN CODE.
 
