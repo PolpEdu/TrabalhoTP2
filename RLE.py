@@ -1,4 +1,4 @@
-def encode_message(message):
+def compressRLE(message):
     encoded_string = ""
     i = 0
     while (i <= len(message)-1):
@@ -21,7 +21,7 @@ def encode_message(message):
     return encoded_string
 
 
-def decode(our_message):
+def decompressRLE(our_message):
     decoded_message = ""
     i = 0
     j = 0

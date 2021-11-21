@@ -217,7 +217,7 @@ Para codificar estas fontes é indispensável referir que haverá CODECs melhore
 Como foi referido inicialmente, para o ser humano viver em sociedade é indispensável transmitir informação o mais rapidamente possível, por isso, é essencial haver um constante avanço (nem que seja mínimo) por parte dos estudos da matéria em causa.
 
 
-O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.\\Um bom exemplo disto é codificar uma imagem, atualmente, seria mais vantajoso codifica-la em \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}, um formato de codificação sem perdas de data de imagens.} do que usando a codificação \textit{LZ77} (apesar desta não necessitar \textit{à priori} do conhecimento da estrutura da fonte). Como se trata de uma imagem o método \textit{PNG} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis estão usualmente correlacionados.
+O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.\\Um bom exemplo disto é codificar uma imagem, atualmente, seria mais vantajoso codifica-la em \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}, um formato de codificação sem perdas de data para imagens.} do que usando a codificação \textit{LZ77} (apesar desta não necessitar \textit{à priori} do conhecimento da estrutura da fonte). Como se trata de uma imagem o método \textit{PNG} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis estão usualmente correlacionados.
 
 \begin{figure}[h]
 
@@ -226,7 +226,7 @@ O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, mu
 \caption{Exemplo de uma codificação atual para imagens: \textit{Delta Encoding}, a data codificada é obtida pela a diferença do valor anterior. Em imagens (no formato \textit{PNG}), em vez de números á direita, tem-se pixeis em diferentes posições.}
 \end{figure}
 
-Resumidamente, atualmente  é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral, como é o caso da Codificação DEFLATE. 
+Resumidamente, atualmente  é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral. 
 %Deflate em ZIPS e PNGs,
 
 
@@ -243,10 +243,16 @@ E seguidamente, comprimimos as diferentes fontes usando 5 algoritmos de compress
     \item Codificação PPM \textit{(Prediction by Partial Matching)}
 \end{enumerate}
 
-Calculando, depois da compressão o número médio de bits por símbolo usado.
+Calculando finalmente, depois da compressão, o número médio de bits por símbolo usado.
 
 \subsection{Resultados}
-The results goes here.
+Antes de revelar os resultados obtidos pelos diferentes métodos de codificação, queremos, primeiramente, salientar as entropias da data em si:
+
+
+% Entropia de bible.txt: 4.34275 bits/simbolo
+% Entropia de finance.csv: 5.15995 bits/simbolo
+% Entropia de jquery-3.6.0.js: 5.06698 bits/simbolo
+% Entropia de random.txt: 6.00000 bits/simbolo
 
 \subsection{Conclusões}
 The conclusions goes here.
