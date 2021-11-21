@@ -48,8 +48,8 @@ def main():
         encodedNumbers, encodedLetters, dictionary = compressLZ78(data)
         # print("len alf: "+str(len(dictionary))) (menor que a len da data)
 
-        # print(
-        #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.nrmediobitsLZ78():.5f} bits/simbolo")
+        print(
+            f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
 
         #
         #
