@@ -214,47 +214,52 @@ Para codificar estas fontes é indispensável referir que haverá CODECs melhore
 
 % Esse estado da arte deverá versar pelo menos os seguintes aspectos: principais  módulos dos codecs e transformadas aplicáveis no domínio do texto e principais códigos usados, bem como a suas combinações
 \subsection{\textit{State of the art}}
-Como foi referido inicialmente, para o ser humano viver em sociedade é indispensável transmitir informação o mais rapidamente possível, por isso, é essencial haver um constante avanço (nem que seja mínimo) por parte dos estudos da matéria em causa.
+Como foi referido inicialmente, para o ser humano viver em sociedade é indispensável transmitir informação o mais rapidamente possível, por isso, é essencial haver um constante avanço (nem que seja mínimo) por parte dos estudos da matéria em causa. O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.
+Atualmente, é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral.
 
-% escrever mais algoritmos
-O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.\\Um bom exemplo disto é codificar uma imagem, atualmente, seria mais vantajoso codifica-la em \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}, um formato de codificação sem perdas de data para imagens.} do que usando a codificação \textit{LZ77} (apesar desta não necessitar \textit{à priori} do conhecimento da estrutura da fonte). Como se trata de uma imagem o método \textit{PNG} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis estão usualmente correlacionados.
+\subsubsection{Codificação Delta Encoding} 
+Um bom exemplo da importância da dependência de data é visto quando se codifica uma imagem, atualmente, seria mais vantajoso codifica-la em \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}, um formato de codificação sem perdas de data para imagens.} do que usando a codificação \textit{LZ77} (apesar desta não necessitar \textit{à priori} do conhecimento da estrutura da fonte). Como se trata de uma imagem o método \textit{PNG} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis estão usualmente correlacionados.
 
 \begin{figure}[h]
 \includegraphics[width=0.5\textwidth]{deltaenc.png}
 \caption{Exemplo de uma codificação atual para imagens: \textit{Delta Encoding}, a data codificada é obtida pela a diferença do valor anterior. Em imagens (no formato \textit{PNG}), em vez de números á direita, tem-se pixeis em diferentes posições.}
 \end{figure}
 
-Resumidamente, atualmente  é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral.
-
-
-% falar destes metodos:
-
+% pedir ao stor para rever erros teóricos nesta parte:
 \subsubsection{Codificação de Huffman} 
 
 O Código de Huffman, um código ótimo devido a nenhum código ser prefixo\footnote{Um código diz-se "de prefixo" quando nenhuma palavra é prefixo da outra, ou seja, um código de prefixo é um código unicamente descodificável.} um do outro, é sem dúvida um dos métodos de compressão mais conhecidos devido à sua simplicidade, fácil implementação, eficácia e não ter patente daí esta codificação ser amplamente usada em aplicações de compressão que vão de \textit{GZIP}, \textit{PKZIP}, \textit{BZIP2} a formatos de imagem como \textit{PNG} e \textit{JPEG}.
 
 Esta codificação consiste em:
-
 \begin{enumerate}
     \item Ordenar os símbolos por ordem crescente de ocorrências
     \item Construir uma árvore binária até não haver mais símbolos:
     \begin{enumerate}
         \item Combinar os dois símbolos menos frequentes num único símbolo (cada folha é um símbolo sendo, portanto, um bit com um valor de 1 ou 0)
-        
-        
         \item Acrescentar o novo símbolo à lista em que a frequência é a soma das frequências individuais.
     \end{enumerate}
 \end{enumerate}
-
 A eficácia desta codificação reside no facto dos símbolos que ocorrem mais vezes sejam codificados com menos bits, estando os símbolos com mais ocorrências mais próximos da raiz da árvore binária.
 
 A eficiência do código é dada por:
+\begin{center}
+\begin{math}H(S)\leq\Bar{l}<H(S)+1\end{math}\\
+\small Sendo \begin{math}H(S)\end{math} a entropia, \begin{math}\Bar{l}\end{math} o número de bits médio.  
+\end{center}
 
-\begin{math}H(S)<=|l\end{math}
+Apesar da sua grande eficiência, infelizmente, é de grande importância referir que não é perfeito. Além de também termos que codificar a árvore binária gerada depois de codificar a fonte o código de Huffman assume que:
+\begin{enumerate}
+    \item A data usada é independente, ou seja, que os valores a comprimir são independentes, o que geralmente não são. Como foi referido no inicio do deste Capitulo a dependência da data é muito importante quando queremos reduzir a entropia, é importante saber o tipo de data que queremos comprimir porque sabemos que dependências tomar partido de para obter uma codificação ideal.
+    \item Tem de existir o modelo da distribuição estatística. Uma resposta para este problema foi o \textit{Modelo Adaptativo de Huffman}.
+\end{enumerate}
 
 
+Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}. %este paragrafo está correto?
 
+%\url{https://en.wikipedia.org/wiki/Huffman_coding#Adaptive_Huffman_coding
 \subsubsection{Codificação LZ78 \textit{()}}
+
+
 \subsubsection{Codificação PPM \textit{()}}
 \subsubsection{Codificação Burrows Wheeler \textit{()}}
 \subsubsection{Codificação Move to Front \textit{()}}
