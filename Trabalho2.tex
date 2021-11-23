@@ -7,36 +7,7 @@
 \else
   \usepackage{cite}
 \fi
-% cite.sty was written by Donald Arseneau
-% V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
-% \cite{} output to follow that of the IEEE. Loading the cite package will
-% result in citation numbers being automatically sorted and properly
-% "compressed/ranged". e.g., [1], [9], [2], [7], [5], [6] without using
-% cite.sty will become [1], [2], [5]--[7], [9] using cite.sty. cite.sty's
-% \cite will automatically add leading space, if needed. Use cite.sty's
-% noadjust option (cite.sty V3.8 and later) if you want to turn this off
-% such as if a citation ever needs to be enclosed in parenthesis.
-% cite.sty is already installed on most LaTeX systems. Be sure and use
-% version 5.0 (2009-03-20) and later if using hyperref.sty.
-% The latest version can be obtained at:
-% http://www.ctan.org/pkg/cite
-% The documentation is contained in the cite.sty file itself.
-%
-% Note that some packages require special options to format as the Computer
-% Society requires. In particular, Computer Society  papers do not use
-% compressed citation ranges as is done in typical IEEE papers
-% (e.g., [1]-[4]). Instead, they list every citation separately in order
-% (e.g., [1], [2], [3], [4]). To get the latter we need to load the cite
-% package with the nocompress option which is supported by cite.sty v4.0
-% and later. Note also the use of a CLASSOPTION conditional provided by
-% IEEEtran.cls V1.7 and later.
 
-
-
-
-
-% *** GRAPHICS RELATED PACKAGES ***
-%
 \ifCLASSINFOpdf
   % \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
@@ -209,7 +180,16 @@ Teoria da Informação, IEEE, CODECs, \LaTeX, algoritmos, compressão de texto, 
 \IEEEpubidadjcol
 
 \subsubsection{Dados por base}
-Devido a esta notável questão, pretendemos, usando 4 fontes de texto distintas como exemplo (\textit{bible.txt, finance.csv, jquery-3.6.0.js, random.txt}) estudar diferentes CODECs de compressão eficiente não destrutiva de texto.\\
+%explicar melhor
+Devido a esta notável questão, pretendemos, usando 4 fontes de texto distintas como exemplo:
+
+\begin{enumerate}
+    \item \textit{bible.txt}: Ficheiro de texto composto por uma transcrição da Bíblia.
+    \item \textit{finance.csv}: Ficheiro de texto composto por data separada por vírgulas.
+    \item \textit{jquery-3.6.0.js}: Ficheiro de texto composto pelo código fonte da livraria de \textit{JavaScript}:\textit{Jquery}.
+    \item \textit{random.txt}: Ficheiro de texto composto por um conjunto de caracteres aleatório.
+\end{enumerate}
+
 Para codificar estas fontes é indispensável referir que haverá CODECs melhores do que outros dependendo da fonte selecionada. Pretende-se, portanto, encontrar não um CODEC ideal para uma determinada fonte, mas sim \textbf{o mais eficaz geralmente}. 
 
 % Esse estado da arte deverá versar pelo menos os seguintes aspectos: principais  módulos dos codecs e transformadas aplicáveis no domínio do texto e principais códigos usados, bem como a suas combinações
@@ -220,7 +200,7 @@ Atualmente, é essencial ter em conta o tipo de data a codificar na sua codifica
 \subsubsection{Codificação Delta Encoding} 
 Um bom exemplo da importância da dependência de data é visto quando se codifica uma imagem, atualmente, seria mais vantajoso codifica-la em \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}, um formato de codificação sem perdas de data para imagens.} do que usando a codificação \textit{LZ77} (apesar desta não necessitar \textit{à priori} do conhecimento da estrutura da fonte). Como se trata de uma imagem o método \textit{PNG} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis estão usualmente correlacionados.
 
-\begin{figure}[h]
+\begin{figure}[htp]
 \includegraphics[width=0.5\textwidth]{deltaenc.png}
 \caption{Exemplo de uma codificação atual para imagens: \textit{Delta Encoding}, a data codificada é obtida pela a diferença do valor anterior. Em imagens (no formato \textit{PNG}), em vez de números á direita, tem-se pixeis em diferentes posições.}
 \end{figure}
@@ -249,20 +229,34 @@ A eficiência do código é dada por:
 
 Apesar da sua grande eficiência, infelizmente, é de grande importância referir que não é perfeito. Além de também termos que codificar a árvore binária gerada depois de codificar a fonte o código de Huffman assume que:
 \begin{enumerate}
-    \item A data usada é independente, ou seja, que os valores a comprimir são independentes, o que geralmente não são. Como foi referido no inicio do deste Capitulo a dependência da data é muito importante quando queremos reduzir a entropia, é importante saber o tipo de data que queremos comprimir porque sabemos que dependências tomar partido de para obter uma codificação ideal.
+    \item A data usada é independente, ou seja, que os valores a comprimir são independentes, o que geralmente não são\footnote{Como foi referido no inicio do deste Capitulo a dependência da data é muito importante quando queremos reduzir a entropia, é importante saber o tipo de data que queremos comprimir porque sabemos que dependências tomar partido de para obter uma codificação ideal}.
     \item Tem de existir o modelo da distribuição estatística. Uma resposta para este problema foi o \textit{Modelo Adaptativo de Huffman}.
 \end{enumerate}
 
 
-Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}. %este paragrafo está correto?
+Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}. %este paragrafo está correto? Perguntar stor
 
 %\url{https://en.wikipedia.org/wiki/Huffman_coding#Adaptive_Huffman_coding
-\subsubsection{Codificação LZ78 \textit{()}}
+\subsubsection{Codificação LZ78}
 
 
-\subsubsection{Codificação PPM \textit{()}}
-\subsubsection{Codificação Burrows Wheeler \textit{()}}
-\subsubsection{Codificação Move to Front \textit{()}}
+
+\subsubsection{Codificação Run-Lenght-Encoding}
+\subsubsection{Codificação Burrows-Wheeler}
+A Codificação Burrows-Wheeler consiste em, dada uma cadeia de comprimento $N$, criamos sequências 
+
+\subsubsection{Codificação Move-to-Front}
+Este método consiste em codificar uma string substituindo cada símbolo com a sua respetiva posição no array. Em cada substituição, será realocada a posição desse símbolo no array, sendo este movido para o início do mesmo. Assim, no final, os símbolos que foram mais recentemente usados, estarão no início do array.
+
+
+Para o nosso trabalho usaremos as combinações
+\begin{enumerate}
+    \item \textbf{Codificação de Huffman}
+    \item \textbf{Codificação LZW + Huffman}, uma junção que normalmente resulta em compressões muito boas, visto que depois de codificar em LZW, um conjunto de bits, como por exemplo, 000 pode ser representado por um só bit 0.
+    \item \textbf{Codificação Burrows Wheeler + Run-Lenght-Encoding}, uma combinação que 
+    
+    \item \textbf{Codificação Move to Front + Huffman}
+\end{enumerate}
 
 
 \section{Métodos}\label{sec:metodos}
@@ -271,7 +265,7 @@ E seguidamente, comprimimos as diferentes fontes usando 5 algoritmos de compress
 
 \begin{enumerate}
     \item Codificação de Huffman
-    \item Codificação LZ78 + Huffman \textit{()}
+    \item Codificação LZW + Huffman \textit{()}
     \item Codificação Burrows Wheeler + RLE\textit{()}
     \item Codificação Move to Front + Huffman \textit{()}
 \end{enumerate}
