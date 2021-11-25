@@ -31,7 +31,7 @@ def main():
         #
         #
         #
-        # HUFFMAN CODEC
+        # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
         symbols, length = huffmancodec(data)
         # print(f"Codificamos {file} com: {symbols} e {length}")
 

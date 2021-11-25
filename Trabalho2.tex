@@ -200,7 +200,7 @@ Para codificar estas fontes é indispensável referir que haverá CODECs melhore
 Como foi referido inicialmente, para o ser humano viver em sociedade é indispensável transmitir informação o mais rapidamente possível, por isso, é essencial haver um constante avanço (nem que seja mínimo) por parte dos estudos da matéria em causa. O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.
 Atualmente, é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral.
 
-\subsubsection{Codificação Delta Encoding} 
+\subsubsection{Codificação \textbf{Delta Encoding}} 
 Um bom exemplo da importância da dependência de data é visto quando se codifica uma imagem. Como se trata de uma imagem o método \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis vizinhos estão usualmente correlacionados.\\
 
 \begin{figure}[htp]
@@ -209,7 +209,7 @@ Um bom exemplo da importância da dependência de data é visto quando se codifi
 \end{figure}
 
 % pedir ao stor para rever erros teóricos nesta parte:
-\subsubsection{Codificação de Huffman} 
+\subsubsection{Codificação de \textbf{Huffman}} 
 
 O Código de Huffman, um código ótimo devido a nenhum código ser prefixo\footnote{Um código diz-se "de prefixo" quando nenhuma palavra é prefixo da outra, ou seja, um código de prefixo é um código unicamente descodificável.} um do outro, é sem dúvida um dos métodos de compressão mais conhecidos devido à sua simplicidade, fácil implementação, eficácia e não ter patente daí esta codificação ser amplamente usada em aplicações de compressão que vão de \textit{GZIP}, \textit{PKZIP}, \textit{BZIP2} a formatos de imagem como \textit{PNG} e \textit{JPEG}.
 
@@ -237,16 +237,86 @@ Apesar da sua grande eficiência, infelizmente, é de grande importância referi
 \end{enumerate}
 
 
-Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}. %este paragrafo está correto? Perguntar stor
+Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}.
 
 
 \subsubsection{Codificação \textbf{LZW}}
+A codificação LZW\footnote{Por extenso, \textit{Lempel-Ziv-Welch}}, uma variante do LZ78\footnote{Outro método de compressão não destrutivo, feito em 1978 por Lempel-Ziv} em que se evita o envio duplo do "codificador" visto que, com este método, o codificador é construindo progressivamente ao contrário da variânte \textit{LZ78}.
+
+O método conssite em:
+
+% qual é a diferença exactamente de LZW e LZ78,
+% não é preciso mandar a parte "codificador" porque o descodificador já vai construindo progressivamente a tabela à medida da codificação
 
 
+% será que o MTF + Huffman é bom? FAZ BUE MANO FICA BUE FIXE
+% ver estrutura em geral se está bem. sim
 
 \subsubsection{Codificação \textbf{Run-Lenght-Encoding}}
-Este método consiste em representar sequências de valores iguais seguidos de forma eficiente. O algoritmo, aplicável se o comprimento da sequência for maior que 3 para evitar aumentar a data inicial, consiste em substituir conjuntos de letras seguidas por o seu número de ocorrências em vez de elas todas, como por exemplo, a cadeia "\textit{aaabbbaaaaabbc}" ficaria "\textit{3a3b5a2b1c}".
+Este método consiste em representar sequências de valores iguais seguidos de forma eficiente. O algoritmo, aplicável se o comprimento da sequência for maior que 3 para evitar aumentar a data inicial, consiste em substituir conjuntos de letras seguidas por o seu número de ocorrências em vez de elas todas, como por exemplo:
 
+\begin{center}
+\begin{tabular}{ |c|c| } 
+  \hline
+  Data & aaabbbaaaaabbc \\
+  \hline
+  Comprimida & 3a3b5a2b1c \\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\subsubsection{Codificação \textbf{Burrows-Wheeler}}
+A codificação \textbf{Burrows-Wheeler} consiste em, dada uma cadeia, adicionamos um caracter de controlo no final dela, criamos todas as rotações (sendo uma rotação a troca do ultimo carácter em primeiro lugar) da data, organizamos todas as colunas de rotações alfabeticamente e por fim retiramos a nossa cadeia codificada, sendo esta a ultima coluna das rotações ordenadas alfabeticamente.
+Este método, apesar de ser preciso guardar um caracter a mais (o caracter de controlo adicionado no final da cadeia em primeiro lugar) para ser feita a descompressão faz com que os caracteres repetidos fiquem muito próximos uns dos outros, \textbf{criando um ambiente propicio para o uso de outro método por cima deste, tal como o RLE\footnote{Run-Lenght-Encoding.}}.
+
+
+
+\subsubsection{Codificação \textbf{Move-to-Front}}
+Este método consiste em codificar uma cadeia 
+
+Este método de compressão faz com que os caracteres repetidos mais vezes na cadeia fiquem no principio do alfabeto e a cadeia codificada. Como conseguimos ver com o exemplo da codificação da palavra "panama":
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+  \hline
+  Adicionado & Sequência & Lista do Alfabeto\\
+  \hline
+  15 & p \\
+  \hline
+  1 & a \\
+  \hline
+  1 & a \\
+  \hline
+  1 & a \\
+  \hline
+  1 & a \\
+  \hline
+  1 & a \\
+  \hline
+\end{tabular}
+\\
+A lista final fica:
+$[15,1,14,1,14,1]$
+\end{center}
+
+
+\subsection{Codificações a usar}
+Para o nosso trabalho usaremos as seguintes combinações:
+\begin{enumerate}
+    \item \textbf{Codificação de Huffman}
+    \item \textbf{Codificação LZW + Huffman}, uma junção que normalmente resulta em compressões muito boas, visto que depois de codificar em LZW, um conjunto de bits dado da codificação LZW, como por exemplo, 000 pode ser representado por um só bit 0 se aplicarmos Huffman a seguir.
+    \item \textbf{Codificação Burrows-Wheeler + Run-Lenght-Encoding}, uma combinação muito eficaz também visto que ao aplicarmos o CODEC Burrows-Wheeler tendemos a agrupar os caracteres iguais, o que é ideal para, seguidamente, junta-los todos usando apenas um número com a codificação \textit{RLE}.
+    
+    \item \textbf{Codificação Move-to-Front + Huffman}, outra combinação excelente porque a codificação \textbf{Move-to-Front} faz com que os caracteres que estão a ser comprimidos se transformem numa sequência de números de "movidas", sendo uma "movida" do caracter da sua posição atual no alfabeto até ao seu principio. A lista gerada, com isto, é normalmente uma lista com elementos repetidos diversas vezes, o que torna ideal a utilização da codificação de Huffman que codifica idealmente essas repetições para estarem com o menor número de bits possíveis.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%2a parte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Codificação \textbf{Burrows-Wheeler}}
 A codificação \textbf{Burrows-Wheeler} consiste em, dada uma cadeia, adicionamos um caracter de controlo no final dela, criamos todas as rotações (sendo uma rotação a troca do ultimo carácter em primeiro lugar) da data, organizamos todas as colunas de rotações alfabeticamente e por fim retiramos a nossa cadeia codificada, sendo esta a ultima coluna das rotações ordenadas alfabeticamente.
