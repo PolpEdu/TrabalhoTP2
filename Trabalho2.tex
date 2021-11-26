@@ -1,415 +1,389 @@
-
-\documentclass[11pt,journal,compsoc]{IEEEtran}
-
-
-\ifCLASSOPTIONcompsoc
-  \usepackage[nocompress]{cite}
-\else
-  \usepackage{cite}
-\fi
-
-\ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
-\else
-  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
-  % will default to the driver specified in the system graphics.cfg if no
-  % driver is specified.
-  % \usepackage[dvips]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../eps/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.eps}
-\fi
-
-\usepackage{amsmath}
-\usepackage[bottom]{footmisc}
-\usepackage{graphicx} %imagens
-
-
-
-
-
-
-% *** PDF, URL AND HYPERLINK PACKAGES ***
-%
-%\usepackage{url}
-% url.sty was written by Donald Arseneau. It provides better support for
-% handling and breaking URLs. url.sty is already installed on most LaTeX
-% systems. The latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/url
-% Basically, \url{my_url_here}.
-
-
-
-
-
-% *** Do not adjust lengths that control margins, column widths, etc. ***
-% *** Do not use packages that alter fonts (such as pslatex).         ***
-% There should be no need to do such things with IEEEtran.cls V1.6 and later.
-% (Unless specifically asked to do so by the journal or conference you plan
-% to submit to, of course. )
-
-
-% correct bad hyphenation here
-\hyphenation{op-tical net-works semi-conduc-tor}
-
-
-\begin{document}
-\graphicspath{ {./images/} }
-
-% paper title
-% Titles are generally capitalized except for words such as a, an, and, as,
-% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
-% not capitalized unless they are the first or last word of the title.
-% Linebreaks \\ can be used within to get better formatting as desired.
-% Do not put math or special symbols in the title.
-\title{Teoria da Informação\\2º Trabalho Prático\\CODEC não destrutivo para Texto}
-%
-%
-% author names and IEEE memberships
-% note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
-% a structure at a ~ so this keeps an author's name from being broken across
-% two lines.
-% use \thanks{} to gain access to the first footnote area
-% a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
-% was not built to handle multiple paragraphs
-%
-%
-%\IEEEcompsocitemizethanks is a special \thanks that produces the bulleted
-% lists the Computer Society journals use for "first footnote" author
-% affiliations. Use \IEEEcompsocthanksitem which works much like \item
-% for each affiliation group. When not in compsoc mode,
-% \IEEEcompsocitemizethanks becomes like \thanks and
-% \IEEEcompsocthanksitem becomes a line break with idention. This
-% facilitates dual compilation, although admittedly the differences in the
-% desired content of \author between the different types of papers makes a
-% one-size-fits-all approach a daunting prospect. For instance, compsoc 
-% journal papers have the author affiliations above the "Manuscript
-% received ..."  text while in non-compsoc journals this is reversed. Sigh.
-
-\author{Eduardo~Nunes,~\IEEEmembership{~2020217675,}
-        André~Moreira,~\IEEEmembership{~2020239416}
-        e~Diogo~Tavares,~\IEEEmembership{~2020236566}% <-this % stops a space
-\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem Docente da cadeira: Paulo Fernando Pereira de Carvalho.
-\IEEEcompsocthanksitem Docente da aula: Marco António Machado Simões \protect\\Grupo 5 da turma PL6.}% <-this % stops an unwanted space
-\thanks{Trabalho realizado com base nos conhecimentos\\ obtidos na cadeira da Teoria da Informação.}}
-
-% note the % following the last \IEEEmembership and also \thanks - 
-% these prevent an unwanted space from occurring between the last author name
-% and the end of the author line. i.e., if you had this:
-% 
-% \author{....lastname \thanks{...} \thanks{...} }
-%                     ^------------^------------^----Do not want these spaces!
-%
-% a space would be appended to the last name and could cause every name on that
-% line to be shifted left slightly. This is one of those "LaTeX things". For
-% instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
-% "AB" then you have to do: "\textbf{A}\textbf{B}"
-% \thanks is no different in this regard, so shield the last } of each \thanks
-% that ends a line with a % and do not let a space in before the next \thanks.
-% Spaces after \IEEEmembership other than the last one are OK (and needed) as
-% you are supposed to have spaces between the names. For what it is worth,
-% this is a minor point as most people would not even notice if the said evil
-% space somehow managed to creep in.
-
-
-
-% The paper headers
-\markboth{Trabalho TEORIA DA INFORMAÇÃO n.º~2\> \>Parte 1, Novembro~2021}
-{\MakeLowercase{\textit{et al.}}}%
-
-% in the abstract or keywords.
-\IEEEtitleabstractindextext{%
-\begin{abstract}
-Neste trabalho prático exploramos conceitos de Teoria de Informação, em particular, relativos à Teoria da Compressão. Pretendemos responder, principalmente, à questão: Quais serão os algoritmos mais eficazes de compressão não destrutiva de texto e as suas principais diferenças?\\ Para isto, calculamos o limite mínimo teórico para o número médio de bits por símbolo, a Entropia, para cada uma das fontes fornecidas (todas baseadas em documentos de texto) e, seguidamente, comprimimos essas fontes com diversos algoritmos de compressão de texto monitorizando, por fim, o número médio de bits por símbolo, verificando assim, quais destes se aproximam mais da Entropia de acordo com o CODEC utilizado. Os algoritmos ideais foram aqueles que se aproximaram mais da Entropia consistentemente nas diversas fontes e não abdicaram de muito poder e tempo de processamento para a sua codificação.
-% acabar abstract no final
-\end{abstract}
-
-% Note that keywords are not normally used for peer review papers.
-\begin{IEEEkeywords}
-Teoria da Informação, IEEE, CODECs, \LaTeX, algoritmos, compressão de texto, Python.
-\end{IEEEkeywords}}
-
-
-% make the title area
-\maketitle
-
-
-% To allow for easy dual compilation without having to reenter the
-% abstract/keywords data, the \IEEEtitleabstractindextext text will
-% not be used in maketitle, but will appear (i.e., to be "transported")
-% here as \IEEEdisplaynontitleabstractindextext when the compsoc 
-% or transmag modes are not selected <OR> if conference mode is selected 
-% - because all conference papers position the abstract like regular
-% papers do.
-\IEEEdisplaynontitleabstractindextext
-% \IEEEdisplaynontitleabstractindextext has no effect when using
-% compsoc or transmag under a non-conference mode.
-
-
-
-% For peer review papers, you can put extra information on the cover
-% page as needed:
-% \ifCLASSOPTIONpeerreview
-% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
-% \fi
-%
-% For peerreview papers, this IEEEtran command inserts a page break and
-% creates the second title. It will be ignored for other modes.
-\IEEEpeerreviewmaketitle
-
-\IEEEraisesectionheading{\section{Introdução}\label{sec:introduction}}
-
-\subsection{Problema e a sua importância}
-\IEEEPARstart{E}{ste} trabalho visa encontrar uma solução para a compressão eficiente não destrutiva de texto. Um dos pilares da vida humana é \textbf{transmitir informação o mais rapidamente possível}, primeiro fisicamente através de cartas, sinais luminosos, sinais sonoros, impulsos elétricos e na \textbf{atualidade essencialmente através de bits digitais}. A determinada altura \textbf{é certo de que iremos chegar a um limite físico da rapidez com que enviamos bits}. Se continuarmos a necessitar de enviar grandes quantidades de informação com cada vez maior rapidez, é necessário encontrar uma maneira de representar a mesma informação com menor número de bits – \textbf{é crucial comprimir a data a enviar.}
-
-
-
-\subsection{Implementação}
-
-
-É de realçar que \textbf{o foco desta pesquisa não reside na implementação propriamente dita, mas sim na sua fundamentação e validação}. Nesse sentido, decidimos demonstrar o código dos diferentes CODECs\footnote{CODEC significa "Coder-Decoder", algoritmo de compressão de data de modo a transmiti-la mais rapidamente.} com base na linguagem \textit{Python} devido à sua facilidade de leitura, à sua fácil implementação, caso o leitor pretenda testar os algoritmos apresentados, e ao fácil acesso de módulos que podem auxiliar o tratamento de dados das fontes.
-
-% needed in second column of first page if using \IEEEpubid
-\IEEEpubidadjcol
-
-\subsubsection{Dados por base}
-%explicar melhor
-Devido a esta notável questão, pretendemos, usando 4 fontes de texto distintas como exemplo:
-% Entropia de bible.txt: 4.34275 bits/simbolo
-% Entropia de finance.csv: 5.15995 bits/simbolo
-% Entropia de jquery-3.6.0.js: 5.06698 bits/simbolo
-% Entropia de random.txt: 6.00000 bits/simbolo
-\begin{enumerate}
-    \item \textit{bible.txt}: Ficheiro de texto composto por uma transcrição da Bíblia. A sua entropia é 4.34275 bits/símbolo.
-    \item \textit{finance.csv}: Ficheiro de texto composto por data separada por vírgulas. A sua entropia é 5.15995 bits/símbolo.
-    \item \textit{jquery-3.6.0.js}: Ficheiro de texto composto pelo código fonte da livraria de \textit{JavaScript}:\textit{Jquery}. A sua entropia é 5.06698 bits/símbolo.
-    \item \textit{random.txt}: Ficheiro de texto composto por um conjunto de caracteres aleatório. A sua entropia é 6 bits/símbolo.
-\end{enumerate}
-
-Para codificar estas fontes é indispensável referir que haverá CODECs melhores do que outros dependendo da fonte selecionada. Pretende-se, portanto, encontrar não um CODEC ideal para uma determinada fonte, mas sim \textbf{o mais eficaz geralmente}. 
-
-% Esse estado da arte deverá versar pelo menos os seguintes aspectos: principais  módulos dos codecs e transformadas aplicáveis no domínio do texto e principais códigos usados, bem como a suas combinações
-\subsection{\textit{State of the art}}
-Como foi referido inicialmente, para o ser humano viver em sociedade é indispensável transmitir informação o mais rapidamente possível, por isso, é essencial haver um constante avanço (nem que seja mínimo) por parte dos estudos da matéria em causa. O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.
-Atualmente, é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral.
-
-\subsubsection{Codificação \textbf{Delta Encoding}} 
-Um bom exemplo da importância da dependência de data é visto quando se codifica uma imagem. Como se trata de uma imagem o método \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis vizinhos estão usualmente correlacionados.\\
-
-\begin{figure}[htp]
-\includegraphics[width=0.5\textwidth]{deltaenc.png}
-\caption{Exemplo de uma codificação atual para imagens: \textit{Delta Encoding}, a data codificada é obtida pela a diferença do valor anterior. Em imagens (no formato \textit{PNG}), em vez de números á direita, tem-se pixeis com diferentes valores de cores/posições.}
-\end{figure}
-
-% pedir ao stor para rever erros teóricos nesta parte:
-\subsubsection{Codificação de \textbf{Huffman}} 
-
-O Código de Huffman, um código ótimo devido a nenhum código ser prefixo\footnote{Um código diz-se "de prefixo" quando nenhuma palavra é prefixo da outra, ou seja, um código de prefixo é um código unicamente descodificável.} um do outro, é sem dúvida um dos métodos de compressão mais conhecidos devido à sua simplicidade, fácil implementação, eficácia e não ter patente daí esta codificação ser amplamente usada em aplicações de compressão que vão de \textit{GZIP}, \textit{PKZIP}, \textit{BZIP2} a formatos de imagem como \textit{PNG} e \textit{JPEG}.
-
-Esta codificação consiste em:
-\begin{enumerate}
-    \item Ordenar os símbolos por ordem crescente de ocorrências
-    \item Construir uma árvore binária até não haver mais símbolos:
+    
+    \documentclass[11pt,journal,compsoc]{IEEEtran}
+    
+    
+    \ifCLASSOPTIONcompsoc
+      \usepackage[nocompress]{cite}
+    \else
+      \usepackage{cite}
+    \fi
+    
+    \ifCLASSINFOpdf
+      % \usepackage[pdftex]{graphicx}
+      % declare the path(s) where your graphic files are
+      % \graphicspath{{../pdf/}{../jpeg/}}
+      % and their extensions so you won't have to specify these with
+      % every instance of \includegraphics
+      % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+    \else
+      % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+      % will default to the driver specified in the system graphics.cfg if no
+      % driver is specified.
+      % \usepackage[dvips]{graphicx}
+      % declare the path(s) where your graphic files are
+      % \graphicspath{{../eps/}}
+      % and their extensions so you won't have to specify these with
+      % every instance of \includegraphics
+      % \DeclareGraphicsExtensions{.eps}
+    \fi
+    
+    \usepackage{amsmath}
+    \usepackage[bottom]{footmisc}
+    \usepackage{graphicx} %imagens
+    
+    
+    
+    
+    
+    
+    % *** PDF, URL AND HYPERLINK PACKAGES ***
+    %
+    %\usepackage{url}
+    % url.sty was written by Donald Arseneau. It provides better support for
+    % handling and breaking URLs. url.sty is already installed on most LaTeX
+    % systems. The latest version and documentation can be obtained at:
+    % http://www.ctan.org/pkg/url
+    % Basically, \url{my_url_here}.
+    
+    
+    
+    
+    
+    % *** Do not adjust lengths that control margins, column widths, etc. ***
+    % *** Do not use packages that alter fonts (such as pslatex).         ***
+    % There should be no need to do such things with IEEEtran.cls V1.6 and later.
+    % (Unless specifically asked to do so by the journal or conference you plan
+    % to submit to, of course. )
+    
+    
+    % correct bad hyphenation here
+    \hyphenation{op-tical net-works semi-conduc-tor}
+    
+    
+    \begin{document}
+    \graphicspath{ {./images/} }
+    
+    % paper title
+    % Titles are generally capitalized except for words such as a, an, and, as,
+    % at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+    % not capitalized unless they are the first or last word of the title.
+    % Linebreaks \\ can be used within to get better formatting as desired.
+    % Do not put math or special symbols in the title.
+    \title{Teoria da Informação\\2º Trabalho Prático\\CODEC não destrutivo para Texto}
+    %
+    %
+    % author names and IEEE memberships
+    % note positions of commas and nonbreaking spaces ( ~ ) LaTeX will not break
+    % a structure at a ~ so this keeps an author's name from being broken across
+    % two lines.
+    % use \thanks{} to gain access to the first footnote area
+    % a separate \thanks must be used for each paragraph as LaTeX2e's \thanks
+    % was not built to handle multiple paragraphs
+    %
+    %
+    %\IEEEcompsocitemizethanks is a special \thanks that produces the bulleted
+    % lists the Computer Society journals use for "first footnote" author
+    % affiliations. Use \IEEEcompsocthanksitem which works much like \item
+    % for each affiliation group. When not in compsoc mode,
+    % \IEEEcompsocitemizethanks becomes like \thanks and
+    % \IEEEcompsocthanksitem becomes a line break with idention. This
+    % facilitates dual compilation, although admittedly the differences in the
+    % desired content of \author between the different types of papers makes a
+    % one-size-fits-all approach a daunting prospect. For instance, compsoc 
+    % journal papers have the author affiliations above the "Manuscript
+    % received ..."  text while in non-compsoc journals this is reversed. Sigh.
+    
+    \author{Eduardo~Nunes,~\IEEEmembership{~2020217675,}
+            André~Moreira,~\IEEEmembership{~2020239416}
+            e~Diogo~Tavares,~\IEEEmembership{~2020236566}% <-this % stops a space
+    \IEEEcompsocitemizethanks{\IEEEcompsocthanksitem Docente da cadeira: Paulo Fernando Pereira de Carvalho.
+    \IEEEcompsocthanksitem Docente da aula: Marco António Machado Simões \protect\\Grupo 5 da turma PL6.}% <-this % stops an unwanted space
+    \thanks{Trabalho realizado com base nos conhecimentos\\ obtidos na cadeira da Teoria da Informação.}}
+    
+    % note the % following the last \IEEEmembership and also \thanks - 
+    % these prevent an unwanted space from occurring between the last author name
+    % and the end of the author line. i.e., if you had this:
+    % 
+    % \author{....lastname \thanks{...} \thanks{...} }
+    %                     ^------------^------------^----Do not want these spaces!
+    %
+    % a space would be appended to the last name and could cause every name on that
+    % line to be shifted left slightly. This is one of those "LaTeX things". For
+    % instance, "\textbf{A} \textbf{B}" will typeset as "A B" not "AB". To get
+    % "AB" then you have to do: "\textbf{A}\textbf{B}"
+    % \thanks is no different in this regard, so shield the last } of each \thanks
+    % that ends a line with a % and do not let a space in before the next \thanks.
+    % Spaces after \IEEEmembership other than the last one are OK (and needed) as
+    % you are supposed to have spaces between the names. For what it is worth,
+    % this is a minor point as most people would not even notice if the said evil
+    % space somehow managed to creep in.
+    
+    
+    
+    % The paper headers
+    \markboth{Trabalho TEORIA DA INFORMAÇÃO n.º~2\> \>Parte 1, Novembro~2021}
+    {\MakeLowercase{\textit{et al.}}}%
+    
+    % in the abstract or keywords.
+    \IEEEtitleabstractindextext{%
+    \begin{abstract}
+    Neste trabalho prático exploramos conceitos de Teoria de Informação, em particular, relativos à Teoria da Compressão. Pretendemos responder, principalmente, à questão: Quais serão os algoritmos mais eficazes de compressão não destrutiva de texto e as suas principais diferenças?\\ Para isto, calculamos o limite mínimo teórico para o número médio de bits por símbolo, a Entropia, para cada uma das fontes fornecidas (todas baseadas em documentos de texto) e, seguidamente, comprimimos essas fontes com diversos algoritmos de compressão de texto monitorizando, por fim, o número médio de bits por símbolo, verificando assim, quais destes se aproximam mais da Entropia de acordo com o CODEC utilizado. Os algoritmos ideais foram aqueles que se aproximaram mais da Entropia consistentemente nas diversas fontes e não abdicaram de muito poder e tempo de processamento para a sua codificação.
+    % acabar abstract no final
+    \end{abstract}
+    
+    % Note that keywords are not normally used for peer review papers.
+    \begin{IEEEkeywords}
+    Teoria da Informação, IEEE, CODECs, \LaTeX, algoritmos, compressão de texto, Python.
+    \end{IEEEkeywords}}
+    
+    
+    % make the title area
+    \maketitle
+    
+    
+    % To allow for easy dual compilation without having to reenter the
+    % abstract/keywords data, the \IEEEtitleabstractindextext text will
+    % not be used in maketitle, but will appear (i.e., to be "transported")
+    % here as \IEEEdisplaynontitleabstractindextext when the compsoc 
+    % or transmag modes are not selected <OR> if conference mode is selected 
+    % - because all conference papers position the abstract like regular
+    % papers do.
+    \IEEEdisplaynontitleabstractindextext
+    % \IEEEdisplaynontitleabstractindextext has no effect when using
+    % compsoc or transmag under a non-conference mode.
+    
+    
+    
+    % For peer review papers, you can put extra information on the cover
+    % page as needed:
+    % \ifCLASSOPTIONpeerreview
+    % \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+    % \fi
+    %
+    % For peerreview papers, this IEEEtran command inserts a page break and
+    % creates the second title. It will be ignored for other modes.
+    \IEEEpeerreviewmaketitle
+    
+    \IEEEraisesectionheading{\section{Introdução}\label{sec:introduction}}
+    
+    \subsection{Problema e a sua importância}
+    \IEEEPARstart{E}{ste} trabalho visa encontrar uma solução para a compressão eficiente não destrutiva de texto. Um dos pilares da vida humana é \textbf{transmitir informação o mais rapidamente possível}, primeiro fisicamente através de cartas, sinais luminosos, sinais sonoros, impulsos elétricos e na \textbf{atualidade essencialmente através de bits digitais}. A determinada altura \textbf{é certo de que iremos chegar a um limite físico da rapidez com que enviamos bits}. Se continuarmos a necessitar de enviar grandes quantidades de informação com cada vez maior rapidez, é necessário encontrar uma maneira de representar a mesma informação com menor número de bits – \textbf{é crucial comprimir a data a enviar.}
+    
+    
+    
+    \subsection{Implementação}
+    
+    
+    É de realçar que \textbf{o foco desta pesquisa não reside na implementação propriamente dita, mas sim na sua fundamentação e validação}. Nesse sentido, decidimos demonstrar o código dos diferentes CODECs\footnote{CODEC significa "Coder-Decoder", algoritmo de compressão de data de modo a transmiti-la mais rapidamente.} com base na linguagem \textit{Python} devido à sua facilidade de leitura, à sua fácil implementação, caso o leitor pretenda testar os algoritmos apresentados, e ao fácil acesso de módulos que podem auxiliar o tratamento de dados das fontes.
+    
+    % needed in second column of first page if using \IEEEpubid
+    \IEEEpubidadjcol
+    
+    \subsubsection{Dados por base}
+    %explicar melhor
+    Devido a esta notável questão, pretendemos, usando 4 fontes de texto distintas como exemplo:
+    % Entropia de bible.txt: 4.34275 bits/simbolo
+    % Entropia de finance.csv: 5.15995 bits/simbolo
+    % Entropia de jquery-3.6.0.js: 5.06698 bits/simbolo
+    % Entropia de random.txt: 6.00000 bits/simbolo
     \begin{enumerate}
-        \item Combinar os dois símbolos menos frequentes num único símbolo (cada folha é um símbolo sendo, portanto, um bit com um valor de 1 ou 0)
-        \item Acrescentar o novo símbolo à lista em que a frequência é a soma das frequências individuais.
+        \item \textit{bible.txt}: Ficheiro de texto composto por uma transcrição da Bíblia. A sua entropia é 4.34275 bits/símbolo.
+        \item \textit{finance.csv}: Ficheiro de texto composto por data separada por vírgulas. A sua entropia é 5.15995 bits/símbolo.
+        \item \textit{jquery-3.6.0.js}: Ficheiro de texto composto pelo código fonte da livraria de \textit{JavaScript}:\textit{Jquery}. A sua entropia é 5.06698 bits/símbolo.
+        \item \textit{random.txt}: Ficheiro de texto composto por um conjunto de caracteres aleatório. A sua entropia é 6 bits/símbolo.
     \end{enumerate}
-\end{enumerate}
-A eficácia desta codificação reside no facto dos símbolos que ocorrem mais vezes sejam codificados com menos bits, estando os símbolos com mais ocorrências mais próximos da raiz da árvore binária.
-
-A eficiência do código é dada por:
-\begin{center}
-\begin{math}H(S)\leq\Bar{l}<H(S)+1\end{math}\\
-\small Sendo \begin{math}H(S)\end{math} a entropia, \begin{math}\Bar{l}\end{math} o número de bits médio.  
-\end{center}
-
-Apesar da sua grande eficiência, infelizmente, é de grande importância referir que não é perfeito. Além de também termos que codificar a árvore binária gerada depois de codificar a fonte o código de Huffman assume que:
-\begin{enumerate}
-    \item A data usada é independente, ou seja, que os valores a comprimir são independentes, o que geralmente não são\footnote{Como foi referido no inicio do deste Capitulo a dependência da data é muito importante quando queremos reduzir a entropia, é importante saber o tipo de data que queremos comprimir porque sabemos que dependências tomar partido de para obter uma codificação ideal}.
-    \item Tem de existir o modelo da distribuição estatística. Uma resposta para este problema foi o \textit{Modelo Adaptativo de Huffman}.
-\end{enumerate}
-
-
-Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}.
-
-
-\subsubsection{Codificação \textbf{LZW}}
-A codificação LZW\footnote{Por extenso, \textit{Lempel-Ziv-Welch}}, uma variante do LZ78\footnote{Outro método de compressão não destrutivo, feito em 1978 por Lempel-Ziv} em que se evita o envio duplo do "codificador" visto que, com este método, o codificador é construindo progressivamente ao contrário da variânte \textit{LZ78}.
-
-O método conssite em:
-
-% qual é a diferença exactamente de LZW e LZ78,
-% não é preciso mandar a parte "codificador" porque o descodificador já vai construindo progressivamente a tabela à medida da codificação
-
-
-% será que o MTF + Huffman é bom? FAZ BUE MANO FICA BUE FIXE
-% ver estrutura em geral se está bem. sim
-
-\subsubsection{Codificação \textbf{Run-Lenght-Encoding}}
-Este método consiste em representar sequências de valores iguais seguidos de forma eficiente. O algoritmo, aplicável se o comprimento da sequência for maior que 3 para evitar aumentar a data inicial, consiste em substituir conjuntos de letras seguidas por o seu número de ocorrências em vez de elas todas, como por exemplo:
-
-\begin{center}
-\begin{tabular}{ |c|c| } 
-  \hline
-  Data & aaabbbaaaaabbc \\
-  \hline
-  Comprimida & 3a3b5a2b1c \\
-  \hline
-\end{tabular}
-\end{center}
-
-
-\subsubsection{Codificação \textbf{Burrows-Wheeler}}
-A codificação \textbf{Burrows-Wheeler} consiste em, dada uma cadeia, adicionamos um caracter de controlo no final dela, criamos todas as rotações (sendo uma rotação a troca do ultimo carácter em primeiro lugar) da data, organizamos todas as colunas de rotações alfabeticamente e por fim retiramos a nossa cadeia codificada, sendo esta a ultima coluna das rotações ordenadas alfabeticamente.
-Este método, apesar de ser preciso guardar um caracter a mais (o caracter de controlo adicionado no final da cadeia em primeiro lugar) para ser feita a descompressão faz com que os caracteres repetidos fiquem muito próximos uns dos outros, \textbf{criando um ambiente propicio para o uso de outro método por cima deste, tal como o RLE\footnote{Run-Lenght-Encoding.}}.
-
-
-
-\subsubsection{Codificação \textbf{Move-to-Front}}
-Este método consiste em codificar uma cadeia 
-
-Este método de compressão faz com que os caracteres repetidos mais vezes na cadeia fiquem no principio do alfabeto e a cadeia codificada. Como conseguimos ver com o exemplo da codificação da palavra "panama":
-\begin{center}
-\begin{tabular}{ |c|c|c| } 
-  \hline
-  Adicionado & Sequência & Lista do Alfabeto\\
-  \hline
-  15 & p \\
-  \hline
-  1 & a \\
-  \hline
-  1 & a \\
-  \hline
-  1 & a \\
-  \hline
-  1 & a \\
-  \hline
-  1 & a \\
-  \hline
-\end{tabular}
-\\
-A lista final fica:
-$[15,1,14,1,14,1]$
-\end{center}
-
-
-\subsection{Codificações a usar}
-Para o nosso trabalho usaremos as seguintes combinações:
-\begin{enumerate}
-    \item \textbf{Codificação de Huffman}
-    \item \textbf{Codificação LZW + Huffman}, uma junção que normalmente resulta em compressões muito boas, visto que depois de codificar em LZW, um conjunto de bits dado da codificação LZW, como por exemplo, 000 pode ser representado por um só bit 0 se aplicarmos Huffman a seguir.
-    \item \textbf{Codificação Burrows-Wheeler + Run-Lenght-Encoding}, uma combinação muito eficaz também visto que ao aplicarmos o CODEC Burrows-Wheeler tendemos a agrupar os caracteres iguais, o que é ideal para, seguidamente, junta-los todos usando apenas um número com a codificação \textit{RLE}.
     
-    \item \textbf{Codificação Move-to-Front + Huffman}, outra combinação excelente porque a codificação \textbf{Move-to-Front} faz com que os caracteres que estão a ser comprimidos se transformem numa sequência de números de "movidas", sendo uma "movida" do caracter da sua posição atual no alfabeto até ao seu principio. A lista gerada, com isto, é normalmente uma lista com elementos repetidos diversas vezes, o que torna ideal a utilização da codificação de Huffman que codifica idealmente essas repetições para estarem com o menor número de bits possíveis.
-\end{enumerate}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%2a parte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsubsection{Codificação \textbf{Burrows-Wheeler}}
-A codificação \textbf{Burrows-Wheeler} consiste em, dada uma cadeia, adicionamos um caracter de controlo no final dela, criamos todas as rotações (sendo uma rotação a troca do ultimo carácter em primeiro lugar) da data, organizamos todas as colunas de rotações alfabeticamente e por fim retiramos a nossa cadeia codificada, sendo esta a ultima coluna das rotações ordenadas alfabeticamente.
-Este método, apesar de ser preciso guardar um caracter a mais (o caracter de controlo adicionado no final da cadeia em primeiro lugar) para ser feita a descompressão faz com que os caracteres repetidos fiquem muito próximos uns dos outros, \textbf{criando um ambiente propicio para o uso de outro método por cima deste, tal como o  RLE\footnote{Run-Lenght-Encoding.}}.
-
-
-
-\subsubsection{Codificação Move-to-Front}
-Este método consiste em codificar uma cadeia substituindo cada símbolo com a sua respetiva posição na cadeia. Em cada substituição, será realocada a posição desse símbolo na cadeia, sendo este movido para o início do mesmo. Assim, no final, os símbolos que foram mais recentemente usados, estarão no início da cadeia codificada.
-
-Este método de compressão faz com que os caracteres repetidos mais vezes na cadeia fiquem no principio.
-
-
-\subsection{Codificações a usar}
-Para o nosso trabalho usaremos as seguintes combinações:
-\begin{enumerate}
-    \item \textbf{Codificação de Huffman}
-    \item \textbf{Codificação LZW + Huffman}, uma junção que normalmente resulta em compressões muito boas, visto que depois de codificar em LZW, um conjunto de bits dado da codificação LZW, como por exemplo, 000 pode ser representado por um só bit 0 se aplicarmos Huffman a seguir.
-    \item \textbf{Codificação Burrows-Wheeler + Run-Lenght-Encoding}, uma combinação muito eficaz também visto que ao aplicarmos o CODEC Burrows-Wheeler tendemos a agrupar os caracteres iguais, o que é ideal para, seguidamente, junta-los todos usando apenas um número com a codificação \textit{RLE}.
+    Para codificar estas fontes é indispensável referir que haverá CODECs melhores do que outros dependendo da fonte selecionada. Pretende-se, portanto, encontrar não um CODEC ideal para uma determinada fonte, mas sim \textbf{o mais eficaz geralmente}. 
     
-    \item \textbf{Codificação Move-to-Front + Huffman}, outra combinação excelente porque a codificação Move-to-Front faz com que os caracteres repetidos mais vezes fiquem no inicio da cadeia, %acabar
-\end{enumerate}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%2a parte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Métodos}\label{sec:metodos}
-Começámos então, por explorar o \textit{Dataset} a comprimir composto por 4 fontes de texto distintas, calculando a Entropia\footnote{limite mínimo teórico para o número médio de bits por símbolo} de cada fonte e a sua distribuição estatística.\\
-E seguidamente, comprimimos as diferentes fontes usando 5 algoritmos de compressão diferentes:
-
-\begin{enumerate}
-    \item Codificação de Huffman
-    \item Codificação LZW + Huffman \textit{()}
-    \item Codificação Burrows-Wheeler + RLE\textit{()}
-    \item Codificação Move-to-Front + Huffman \textit{()}
-\end{enumerate}
-
-
-Calculando finalmente, depois dos ficheiros comprimidos, o número médio de bits por símbolo atual de modo a comparar com a entropia inicial e verificar a eficácia da compressão de data em causa.
-
-\section{Resultados} %no geral
-Os resultados 
-
-
-
-\subsection{Conclusões}
-Dos resultados, concluímos que a codificação
-
-
-
-\appendices
-\section{Proof of the First Zonklar Equation}
-Appendix one text goes here.
-
-% you can choose not to have a title for an appendix
-% if you want by leaving the argument blank
-\section{}
-Appendix two text goes here.
-
-
-% use section* for acknowledgment
-\ifCLASSOPTIONcompsoc
-  % The Computer Society usually uses the plural form
-  \section*{Acknowledgments}
-\else
-  % regular IEEE prefers the singular form
-  \section*{Acknowledgment}
-\fi
-
-The authors would like to thank...
-
-\ifCLASSOPTIONcaptionsoff
-  \newpage
-\fi
-
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
-
-\footnotemark 
-
-
-% that's all folks
-\end{document}
-
-
+    % Esse estado da arte deverá versar pelo menos os seguintes aspectos: principais  módulos dos codecs e transformadas aplicáveis no domínio do texto e principais códigos usados, bem como a suas combinações
+    \subsection{\textit{State of the art}}
+    Como foi referido inicialmente, para o ser humano viver em sociedade é indispensável transmitir informação o mais rapidamente possível, por isso, é essencial haver um constante avanço (nem que seja mínimo) por parte dos estudos da matéria em causa. O uso de um algoritmo ideal de compressão sem perdas de data é, obviamente, muito dependente do tipo de data em causa.
+    Atualmente, é essencial ter em conta o tipo de data a codificar na sua codificação, apesar de existirem CODECs não destrutivos para todo o tipo de data em geral.
+    
+    \subsubsection{Codificação \textbf{Delta Encoding}} 
+    Um bom exemplo da importância da dependência de data é visto quando se codifica uma imagem. Como se trata de uma imagem o método \textit{PNG}\footnote{significa \textit{"Portable Network Graphics"}} usa uma versão de  \textit{Delta Encoding} ao fazer \textit{Filtering}, onde em vez de representar todos os valores de uma dada fonte, representamos a diferença entre eles o que é muito útil em imagens visto que os pixeis vizinhos estão usualmente correlacionados.
+    \begin{figure}[htp]
+    \includegraphics[width=0.35\textwidth]{deltaenc.png}
+    \caption{Exemplo de uma codificação atual para imagens: \textit{Delta Encoding}, a data codificada é obtida pela a diferença do valor anterior. Em imagens (no formato \textit{PNG}), em vez de números á direita, tem-se pixeis com diferentes valores de cores/posições.}
+    \end{figure}
+    
+    % pedir ao stor para rever erros teóricos nesta parte:
+    \subsubsection{Codificação de \textbf{Huffman}} 
+    
+    O Código de Huffman, um código ótimo devido a nenhum código ser prefixo\footnote{Um código diz-se "de prefixo" quando nenhuma palavra é prefixo da outra, ou seja, um código de prefixo é um código unicamente descodificável.} um do outro, é sem dúvida um dos métodos de compressão mais conhecidos devido à sua simplicidade, fácil implementação, eficácia e não ter patente daí esta codificação ser amplamente usada em aplicações de compressão que vão de \textit{GZIP}, \textit{PKZIP}, \textit{BZIP2} a formatos de imagem como \textit{PNG} e \textit{JPEG}.
+    
+    Esta codificação consiste em:
+    \begin{enumerate}
+        \item Ordenar os símbolos por ordem crescente de ocorrências
+        \item Construir uma árvore binária até não haver mais símbolos:
+        \begin{enumerate}
+            \item Combinar os dois símbolos menos frequentes num único símbolo (cada folha é um símbolo sendo, portanto, um bit com um valor de 1 ou 0)
+            \item Acrescentar o novo símbolo à lista em que a frequência é a soma das frequências individuais.
+        \end{enumerate}
+    \end{enumerate}
+    A eficácia desta codificação reside no facto dos símbolos que ocorrem mais vezes sejam codificados com menos bits, estando os símbolos com mais ocorrências mais próximos da raiz da árvore binária.
+    
+    A eficiência do código é dada por:
+    \begin{center}
+    \begin{math}H(S)\leq\Bar{l}<H(S)+1\end{math}\\
+    \small Sendo \begin{math}H(S)\end{math} a entropia, \begin{math}\Bar{l}\end{math} o número de bits médio.  
+    \end{center}
+    
+    Apesar da sua grande eficiência, infelizmente, é de grande importância referir que não é perfeito. Além de também termos que codificar a árvore binária gerada depois de codificar a fonte o código de Huffman assume que:
+    \begin{enumerate}
+        \item A data usada é independente, ou seja, que os valores a comprimir são independentes, o que geralmente não são\footnote{Como foi referido no inicio do deste Capitulo a dependência da data é muito importante quando queremos reduzir a entropia, é importante saber o tipo de data que queremos comprimir porque sabemos que dependências tomar partido de para obter uma codificação ideal}.
+        \item Tem de existir o modelo da distribuição estatística. Uma resposta para este problema foi o \textit{Modelo Adaptativo de Huffman}.
+    \end{enumerate}
+    
+    
+    Para terminar, uma tentativa de optimização da \textbf{codificação de Huffman} foi tentar agrupar vários símbolos de modo a aumentar a dependência interna entre eles, no entanto, não se costuma fazer isto porque se um alfabeto tiver $m$ símbolos, um agrupamento $n$ implica um alfabeto com $m^n$ símbolos (o número de símbolos cresce exponencialmente o que em termos de memória não é ideal). Uma solução usada foram os \textit{Códigos Aritméticos}.
+    
+    
+    \subsubsection{Codificação \textbf{LZW}}
+    A codificação LZW\footnote{Por extenso, \textit{Lempel-Ziv-Welch}.}, uma variante do LZ78\footnote{Outro método de compressão não destrutivo, feito em 1978 por Lempel-Ziv} em que se evita o envio duplo do "codificador" visto que, com este método, o codificador é construindo progressivamente ao contrário da variante \textit{LZ78}.
+    
+    O método consiste em:
+    \begin{enumerate}
+        \item Criar um dicionário com todos os símbolos do alfabeto. 
+        \item Quando surge um novo padrão constituído \textit{a$|$b} sendo que \textit{a} já se encontra no dicionário e \textit{ab} não, encontrar a maior sequências de símbolos \textit{a} da fonte existentes no dicionário.
+        \item Transmite-se o índice \textit do dicionário e cria-se uma entrada nova \textit{ab} no dicionário, ficando assim disponível a sequência \textit{ab} para a sua próxima ocorrência.
+        \item Finalmente, continua-se a codificação no símbolo \textit{b} até acabar a cadeia a codificar.
+    \end{enumerate}
+    %https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
+    É importante referir que este CODEC foi \textbf{um dos primeiros métodos de codificação de texto não destrutivos universalmente usado por computadores}. Um documento de texto em inglês de grande dimensão, ao aplicarmos esta codificação, pode reduzir o seu tamanho original por metade! Apesar da sua implementação ser um bocado complicada por causa da gestão do dicionário e, em termos de eficiência, ao ser lido um novo caracter, ter que percorrer todo o dicionário à procura das formações deste com a cadeia pode ser desgastante para o CPU em causa...
+    % qual é a diferença exactamente de LZW e LZ78,
+    % não é preciso mandar a parte "codificador" porque o descodificador já vai construindo progressivamente a tabela à medida da codificação
+    
+    \subsubsection{Codificação \textbf{Run-Lenght-Encoding}}
+    Este método consiste em representar sequências de valores iguais seguidos de forma eficiente. O algoritmo, aplicável se o comprimento da sequência for maior que 3 para evitar aumentar a data inicial, consiste em substituir conjuntos de letras seguidas por o seu número de ocorrências em vez de elas todas, como por exemplo:
+    
+    \begin{center}
+    \begin{tabular}{ |c|c| } 
+      \hline
+      Data & aaabbbaaaaabbc \\
+      \hline
+      Comprimida & 3a3b5a2b1c \\
+      \hline
+    \end{tabular}
+    \end{center}
+    
+    
+    \subsubsection{Codificação \textbf{Burrows-Wheeler}}
+    A codificação \textbf{Burrows-Wheeler} consiste em, dada uma cadeia, adicionamos um caracter de controlo no final dela, criamos todas as rotações (sendo uma rotação a troca do ultimo carácter em primeiro lugar) da data, organizamos todas as colunas de rotações alfabeticamente e por fim retiramos a nossa cadeia codificada, sendo esta a ultima coluna das rotações ordenadas alfabeticamente.
+    Este método, apesar de ser preciso guardar um caracter a mais (o caracter de controlo adicionado no final da cadeia em primeiro lugar) para ser feita a descompressão faz com que os caracteres repetidos fiquem muito próximos uns dos outros, \textbf{criando um ambiente propicio para o uso de outro método por cima deste, tal como o RLE\footnote{Run-Lenght-Encoding.}}.
+    
+    
+    
+    \subsubsection{Codificação \textbf{Move-to-Front}}
+    Este método de compressão faz com que os caracteres repetidos mais vezes na cadeia fiquem no principio do alfabeto e a cadeia codificada. 
+    
+    
+    Como conseguimos ver com o exemplo da codificação da palavra "\textit{panama}":
+    
+    \begin{center}
+    \begin{tabular}{ |c|c|c| } 
+      \hline
+      Adicionado & Sequência & Lista do Alfabeto\\
+      \hline
+      3 & p & amnp\\
+      \hline
+      1 & pa & pamn\\
+      \hline
+      3 & pan & apmn\\
+      \hline
+      1 & pana & napm\\
+      \hline
+      3 & panam & anpm\\
+      \hline
+      1 & panama & manp\\
+      \hline
+    \end{tabular}
+    
+    
+    
+    A lista codificada final fica:
+    $[3,1,3,1,3,1]$
+    \end{center}
+    
+    
+    \subsection{Codificações a usar}
+    Para o nosso trabalho usaremos as seguintes combinações:
+    \begin{enumerate}
+        \item \textbf{Codificação de Huffman}
+        \item \textbf{Codificação LZW + Huffman}, uma junção que normalmente resulta em compressões muito boas, visto que depois de codificar em LZW, um conjunto de bits dado da codificação LZW, como por exemplo, 000 pode ser representado por um só bit 0 se aplicarmos Huffman a seguir.
+        \item \textbf{Codificação Burrows-Wheeler + Run-Lenght-Encoding}, uma combinação muito eficaz também visto que ao aplicarmos o CODEC Burrows-Wheeler tendemos a agrupar os caracteres iguais, o que é ideal para, seguidamente, junta-los todos usando apenas um número com a codificação \textit{RLE}.
+        
+        \item \textbf{Codificação Move-to-Front + Huffman}, outra combinação excelente porque a codificação \textbf{Move-to-Front} faz com que os caracteres que estão a ser comprimidos se transformem numa sequência de números de "movidas", sendo uma "movida" os passos que um caracter faz da sua posição atual no alfabeto até ao seu principio. A lista gerada, com isto, é normalmente uma lista com elementos repetidos diversas vezes, o que torna ideal a utilização da codificação de Huffman que codifica idealmente essas repetições para estarem com o menor número de bits possíveis.
+    \end{enumerate}
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%2a parte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    \section{Métodos}\label{sec:metodos}
+    Começámos então, por explorar o \textit{Dataset} a comprimir composto por 4 fontes de texto distintas, calculando a Entropia\footnote{limite mínimo teórico para o número médio de bits por símbolo} de cada fonte e a sua distribuição estatística.\\
+    E seguidamente, comprimimos as diferentes fontes usando 5 algoritmos de compressão diferentes:
+    
+    \begin{enumerate}
+        \item Codificação de Huffman
+        \item Codificação LZW + Huffman \textit{()}
+        \item Codificação Burrows-Wheeler + RLE\textit{()}
+        \item Codificação Move-to-Front + Huffman \textit{()}
+    \end{enumerate}
+    
+    
+    Calculando finalmente, depois dos ficheiros comprimidos, o número médio de bits por símbolo atual de modo a comparar com a entropia inicial e verificar a eficácia da compressão de data em causa.
+    
+    \section{Resultados} %no geral
+    Os resultados 
+    
+    
+    
+    \subsection{Conclusões}
+    Dos resultados, concluímos que a codificação
+    
+    
+    
+    \appendices
+    \section{Proof of the First Zonklar Equation}
+    Appendix one text goes here.
+    
+    % you can choose not to have a title for an appendix
+    % if you want by leaving the argument blank
+    \section{}
+    Appendix two text goes here.
+    
+    
+    % use section* for acknowledgment
+    \ifCLASSOPTIONcompsoc
+      % The Computer Society usually uses the plural form
+      \section*{Acknowledgments}
+    \else
+      % regular IEEE prefers the singular form
+      \section*{Acknowledgment}
+    \fi
+    
+    The authors would like to thank...
+    
+    \ifCLASSOPTIONcaptionsoff
+      \newpage
+    \fi
+    
+    \begin{thebibliography}{1}
+    
+    \bibitem{IEEEhowto:kopka}
+    H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+      0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+    
+    \end{thebibliography}
+    
+    \footnotemark 
+    
+    
+    % that's all folks
+    \end{document}
+    
