@@ -1,15 +1,16 @@
 
 import os
-from huffmancodec import *
-from LZ78 import *
-from RLE import *
-import DataInfo
+import compressionmethods.RLE as RLE
+import compressionmethods.MTF.MoveToFront as MTF
+import compressionmethods.LZW.LZW as LZW
+import filecmp
+from DataInfo import *
 
 FILES = ["bible.txt", "finance.csv", "jquery-3.6.0.js", "random.txt"]
 
 
 def main():
-    test()
+    # escrever os dados num arquivo byte-wise
     for file in FILES:
 
         print("Nome: "+file)
@@ -27,27 +28,40 @@ def main():
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
 
+
+        #
+        #
+        #
+        #
+        # Move to front
+        MTF.move2front_encode(file, data, alfabeto)
+        MTF.move2front_decode(file, alfabeto)
+        print(filecmp.cmp("bible.txt", "./dataset/bible.txt"))
+
+
         #
         #
         #
         #
         # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
-        symbols, length = huffmancodec(data)
+        #symbols, length = huffmancodec(data)
         # print(f"Codificamos {file} com: {symbols} e {length}")
 
-        print(
-            f"Número médio de bits de {file} com codificação de Huffman: {DataInfo.nrmediobitsHuffman(length, symbols, ocorrencias, alfabeto):.5f} bits/simbolo")
+        #print(
+        #    f"Número médio de bits de {file} com codificação de Huffman: {DataInfo.nrmediobitsHuffman(length, symbols, ocorrencias, alfabeto):.5f} bits/simbolo")
 
         #
         #
         #
-        #
-        # LZ78 CODEC
-        encodedNumbers, encodedLetters, dictionary = compressLZ78(data)
-        # print("len alf: "+str(len(dictionary))) (menor que a len da data)
+        # 8 BITS - DATA SET COM 2^8 ENTRADAS
+        # MAX_WIDTH não pode ser maior que 16 porque 2*8 = 16 bits
+        # LZW CODEC
+        MAX_WIDTH = 12
+        LZW.compress(file, data, MAX_WIDTH)
+        LZW.decompress(file)
 
-        print(
-            f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
+        #print(
+        #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
 
         #
         #

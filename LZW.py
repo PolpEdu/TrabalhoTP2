@@ -1,1 +1,0 @@
-#adicionar a descompressão
