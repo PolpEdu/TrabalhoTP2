@@ -2,7 +2,6 @@ from __future__ import print_function
 from string import ascii_letters
 from struct import *
 
-SYMBOLTABLE = list(ascii_letters)
  
 def move2front_encode(name,strng, symboltable):
     sequence, pad = [], symboltable[::]
@@ -12,7 +11,7 @@ def move2front_encode(name,strng, symboltable):
         pad = [pad.pop(indx)] + pad
 
 
-    output_file = open(name.split(".")[0] + ".mtf", "wb")
+    output_file = open("./encoded/"+name.split(".")[0] + ".mtf", "wb")
     for data in sequence:
         output_file.write(pack('>H',int(data)))
         
@@ -21,7 +20,7 @@ def move2front_encode(name,strng, symboltable):
     return sequence
  
 def move2front_decode(name,symboltable):
-    input_file = open(name.split(".")[0] + ".mtf", "rb")
+    input_file = open("./encoded/"+name.split(".")[0] + ".mtf", "rb")
     sequence = []
     while True:
         data = input_file.read(2)
@@ -33,9 +32,18 @@ def move2front_decode(name,symboltable):
         char = pad[indx]
         chars.append(char)
         pad = [pad.pop(indx)] + pad
+    
+    to_encode ="".join(chars)
+
+    output_file = open("./decoded/decodedMTF"+name, "wb")
+    #escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
+    output_file.write(bytearray(to_encode.encode())) 
+    output_file.close()
+    
     return ''.join(chars)
  
 if __name__ == '__main__':
+    SYMBOLTABLE = list(ascii_letters)
     for s in ['broood', 'bananaaa', 'hiphophiphop']:
         encode = move2front_encode(s, SYMBOLTABLE)
         print('%14r encodes to %r' % (s, encode), end=', ')

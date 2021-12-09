@@ -3,8 +3,9 @@ import os
 import compressionmethods.RLE as RLE
 import compressionmethods.MTF.MoveToFront as MTF
 import compressionmethods.LZW.LZW as LZW
-import filecmp
+import compressionmethods.HuffmanCODEC.huffmancodec as hf
 from DataInfo import *
+import time
 
 FILES = ["bible.txt", "finance.csv", "jquery-3.6.0.js", "random.txt"]
 
@@ -16,7 +17,7 @@ def main():
         print("Nome: "+file)
         data, alfabeto = read(file)
         print("Tamanho data: "+str(len(data)) +
-              ", tamanho alfabeto: "+str(len(alfabeto)))
+              " bytes, tamanho alfabeto: "+str(len(alfabeto)))
 
         ocorrencias = DataInfo.get_ocorrencias(data, alfabeto)
         # criarhist(ocorrencias, alfabeto)
@@ -34,9 +35,12 @@ def main():
         #
         #
         # Move to front
+        start = time.time()
         MTF.move2front_encode(file, data, alfabeto)
         MTF.move2front_decode(file, alfabeto)
-        print(filecmp.cmp("bible.txt", "./dataset/bible.txt"))
+        end = time.time()
+        print(f"MTF: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedMTF"+file,"./dataset/"+file)
 
 
         #
@@ -44,8 +48,13 @@ def main():
         #
         #
         # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
-        #symbols, length = huffmancodec(data)
-        # print(f"Codificamos {file} com: {symbols} e {length}")
+        start = time.time()
+        hf.Huffman_encode(data, file)
+        hf.Huffman_decode(file)
+        end = time.time()
+        print(f"HUFFMAN: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedHuffman"+file,"./dataset/"+file)
+
 
         #print(
         #    f"Número médio de bits de {file} com codificação de Huffman: {DataInfo.nrmediobitsHuffman(length, symbols, ocorrencias, alfabeto):.5f} bits/simbolo")
@@ -57,8 +66,12 @@ def main():
         # MAX_WIDTH não pode ser maior que 16 porque 2*8 = 16 bits
         # LZW CODEC
         MAX_WIDTH = 12
+        start = time.time()
         LZW.compress(file, data, MAX_WIDTH)
         LZW.decompress(file)
+        end = time.time()
+        print(f"LZW: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedLZW"+file,"./dataset/"+file)
 
         #print(
         #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
@@ -99,12 +112,17 @@ def read(filename):
 # get ocorrencias da data
 
 
-def huffmancodec(data):
-    codec = HuffmanCodec.from_data(data)
-    symbols, lenghts = codec.get_code_len()
-    return symbols, lenghts
-
-
+def checkfiles(PATH1, PATH2):
+    #check where the given files are different
+        with open(PATH1, "r", encoding="ASCII") as f:
+            with open(PATH2, "r", encoding="ASCII") as f2:
+                for line in f:
+                    if line != f2.readline():
+                        print("MTF: DIFERENTE em: ")
+                        print(line)
+                        break
+                else:
+                    print("Ficheiros de descomprimido e original iguais")
 
 if __name__ == "__main__":
     main()

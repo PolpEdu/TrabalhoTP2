@@ -316,5 +316,23 @@ def main():
     print(s)
     print(l)
     
+def Huffman_encode(data,file_name):
+    codec = HuffmanCodec.from_data(data)
+    symbols, length = codec.get_code_len()
+    #save to file
+    codec.save('./encoded/'+file_name.split(".")[0]+'.huff')
+    return symbols, length
+    
+
+def Huffman_decode(file):
+    file_name =file.split(".")[0]+'.huff'
+    codec = HuffmanCodec.load("./encoded/"+file_name)
+    # save to a text file
+    with open('./decoded/decodedHuffman'+file, 'wb') as f:
+        for symbol in codec.decode_streaming(codec.load("./encoded/"+file_name)):
+            f.write(symbol)
+        
+    
+
 if __name__ == "__main__":
     main()
