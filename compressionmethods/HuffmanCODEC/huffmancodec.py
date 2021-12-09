@@ -335,9 +335,8 @@ def Huffman_decode(file):
     codec = HuffmanCodec.load("./encoded/"+file.split(".")[0]+'.huffTable')
     data = codec.decode(open("./encoded/"+file.split(".")[0]+".huffData", "rb").read())
 
-    bytes_decoded = bytearray(data.encode())
     output_file = open("./decoded/decodedHuffman"+file, "wb")
-    output_file.write(bytes_decoded)
+    output_file.write(bytearray(data.encode()))
     output_file.close()
     
 
