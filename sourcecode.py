@@ -4,6 +4,8 @@ import compressionmethods.RLE as RLE
 import compressionmethods.MTF.MoveToFront as MTF
 import compressionmethods.LZW.LZW as LZW
 import compressionmethods.HuffmanCODEC.huffmancodec as hf
+import compressionmethods.BWT.Burrows_Wheeler as BWT
+import compressionmethods.RLE.RLE as RLE
 from DataInfo import *
 import time
 
@@ -29,7 +31,6 @@ def main():
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
 
-
         #
         #
         #
@@ -39,9 +40,8 @@ def main():
         MTF.move2front_encode(file, data, alfabeto)
         MTF.move2front_decode(file, alfabeto)
         end = time.time()
-        print(f"MTF: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedMTF"+file,"./dataset/"+file)
-
+        print(f"MTF encode e decode: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedMTF"+file, "./dataset/"+file)
 
         #
         #
@@ -52,11 +52,10 @@ def main():
         hf.Huffman_encode(data, file)
         hf.Huffman_decode(file)
         end = time.time()
-        print(f"HUFFMAN: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedHuffman"+file,"./dataset/"+file)
+        print(f"HUFFMAN encode e decode: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
 
-
-        #print(
+        # print(
         #    f"Número médio de bits de {file} com codificação de Huffman: {DataInfo.nrmediobitsHuffman(length, symbols, ocorrencias, alfabeto):.5f} bits/simbolo")
 
         #
@@ -70,20 +69,30 @@ def main():
         LZW.compress(file, data, MAX_WIDTH)
         LZW.decompress(file)
         end = time.time()
-        print(f"LZW: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedLZW"+file,"./dataset/"+file)
+        print(f"LZW encode e decode: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
 
-        #print(
+        # print(
         #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
+
+        start = time.time()
+        # BWT.encode(data, file)
+        # BWT.decode(file)
+        end = time.time()
+        print(f"BWT encode e decode: {end-start:.5f} segundos")
+        #checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
 
         #
         #
         #
         #
         # RLE CODEC
-        # dataRLEcompressed = compressRLE(data)
-        # print(
-        #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.nr():.5f} bits/simbolo")
+        start = time.time()
+        RLE.compressRLE(file, data)
+        RLE.decompressRLE(file)
+        end = time.time()
+        print(f"RLE encode e decode: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
 
         print("\n")
     return
@@ -113,16 +122,17 @@ def read(filename):
 
 
 def checkfiles(PATH1, PATH2):
-    #check where the given files are different
-        with open(PATH1, "r") as f:
-            with open(PATH2, "r") as f2:
-                for line in f:
-                    if line != f2.readline():
-                        print("DIFERENTE em: ")
-                        print(line)
-                        break
-                else:
-                    print("Ficheiro descomprimido e original iguais")
+    # check where the given files are different
+    with open(PATH1, "r") as f:
+        with open(PATH2, "r") as f2:
+            for line in f:
+                if line != f2.readline():
+                    print("DIFERENTE em: ")
+                    print(line)
+                    break
+            else:
+                print("Ficheiro descomprimido e original iguais")
+
 
 if __name__ == "__main__":
     main()
