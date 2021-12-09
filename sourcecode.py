@@ -114,15 +114,15 @@ def read(filename):
 
 def checkfiles(PATH1, PATH2):
     #check where the given files are different
-        with open(PATH1, "r", encoding="ASCII") as f:
-            with open(PATH2, "r", encoding="ASCII") as f2:
+        with open(PATH1, "r") as f:
+            with open(PATH2, "r") as f2:
                 for line in f:
                     if line != f2.readline():
-                        print("MTF: DIFERENTE em: ")
+                        print("DIFERENTE em: ")
                         print(line)
                         break
                 else:
-                    print("Ficheiros de descomprimido e original iguais")
+                    print("Ficheiro descomprimido e original iguais")
 
 if __name__ == "__main__":
     main()

@@ -272,8 +272,9 @@ class HuffmanCodec(PrefixCodec):
         # Heap consists of tuples: (frequency, [list of tuples: (symbol, (bitsize, value))])
         heap = [(f, [(s, (0, 0))]) for s, f in frequencies.items()]
         # Add EOF symbol.
-        #if eof not in frequencies:
-        #    heap.append((1, [(eof, (0, 0))]))
+        if eof not in frequencies:
+            #adicionar o EOF simbol
+            heap.append((1, [(eof, (0, 0))]))
 
         # Use heapq approach to build the encodings of the huffman tree leaves.
         heapify(heap)
@@ -320,18 +321,24 @@ def Huffman_encode(data,file_name):
     codec = HuffmanCodec.from_data(data)
     symbols, length = codec.get_code_len()
     #save to file
-    codec.save('./encoded/'+file_name.split(".")[0]+'.huff')
+    codec.save('./encoded/'+file_name.split(".")[0]+'.huffTable')
+
+    bytes_encoded = codec.encode(data)
+    output_file = open("./encoded/"+file_name.split(".")[0]+".huffData", "wb")
+    output_file.write(bytes_encoded)
+    output_file.close()
+
     return symbols, length
     
 
 def Huffman_decode(file):
-    file_name =file.split(".")[0]+'.huff'
-    codec = HuffmanCodec.load("./encoded/"+file_name)
-    # save to a text file
-    with open('./decoded/decodedHuffman'+file, 'wb') as f:
-        for symbol in codec.decode_streaming(codec.load("./encoded/"+file_name)):
-            f.write(symbol)
-        
+    codec = HuffmanCodec.load("./encoded/"+file.split(".")[0]+'.huffTable')
+    data = codec.decode(open("./encoded/"+file.split(".")[0]+".huffData", "rb").read())
+
+    bytes_decoded = bytearray(data.encode())
+    output_file = open("./decoded/decodedHuffman"+file, "wb")
+    output_file.write(bytes_decoded)
+    output_file.close()
     
 
 if __name__ == "__main__":

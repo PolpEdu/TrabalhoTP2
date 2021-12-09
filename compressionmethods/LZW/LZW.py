@@ -89,6 +89,6 @@ def decompress(input_file):
     to_encode = "".join(decompressed_data)
     # storing the decompressed string into a file.
     output_file = open("./decoded/decodedLZW"+input_file, "wb")
-    output_file.write(bytearray(to_encode))
+    output_file.write(bytearray(to_encode.encode()))
         
     output_file.close()
