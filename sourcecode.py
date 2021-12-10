@@ -91,9 +91,9 @@ def main():
         RLE.compressRLE(file, data)
         RLE.decompressRLE(file)
         end = time.time()
-        print(f"RLE encode e decode: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
-
+        print(f"RLE: {end-start:.5f} segundos")
+        checkfiles("./decoded/decodedRLE"+file,"./dataset/"+file)
+        
         print("\n")
     return
 
