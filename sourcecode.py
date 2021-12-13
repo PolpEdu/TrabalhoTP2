@@ -76,8 +76,8 @@ def main():
         #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
 
         start = time.time()
-        # BWT.encode(data, file)
-        # BWT.decode(file)
+        BWT.encode(file, data, 5000)
+        BWT.decode(file)
         end = time.time()
         print(f"BWT encode e decode: {end-start:.5f} segundos")
         #checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
@@ -92,8 +92,8 @@ def main():
         RLE.decompressRLE(file)
         end = time.time()
         print(f"RLE: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedRLE"+file,"./dataset/"+file)
-        
+        checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
+
         print("\n")
     return
 
