@@ -28,7 +28,7 @@ def compressRLE(file, message):
         output_file = open("./encoded/"+file.split(".")[0] + ".rle", "wb")
         for data in encoding: # DA stora a um elemento da data
             #cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
-            output_file.write(pack('>H',int(data))) 
+            output_file.write(pack('>B',ord(data))) 
             
         output_file.close()
 
@@ -40,10 +40,10 @@ def decompressRLE(file):
     compressed_data = []
     # Reading the compressed file.
     while True:
-        rec = file.read(2)
-        if len(rec) != 2:
+        rec = file.read(1)
+        if len(rec) != 1:
             break
-        (data, ) = unpack('>H', rec)
+        (data, ) = unpack('>B', rec)
         compressed_data.append(data)
     file.close()
     

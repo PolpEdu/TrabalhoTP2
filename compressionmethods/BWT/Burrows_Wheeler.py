@@ -7,7 +7,7 @@ def encode(fich, data, blocksize):
         for i in range(0, len(data), blocksize):  # divisão em Blocos
             bwttry = bwt_tranf(data[i-blocksize:i])
             for n in bwttry:
-                f.write(pack('>H',int(ord(n))))
+                f.write(pack('>B',ord(n)))
         f.close
         
 
@@ -34,10 +34,10 @@ def decode(fich):
     compressed_data = []
     # Reading the compressed file.
     while True:
-        rec = file.read(2)
-        if len(rec) != 2:
+        rec = file.read(1) #only 1 byte, B standard size is 1
+        if len(rec) != 1:
             break
-        (data, ) = unpack('>H', rec)
+        (data, ) = unpack('>B', rec) #unpack with >B 
         compressed_data.append(data)
 
     file.close()
@@ -46,21 +46,21 @@ def decode(fich):
     bwt = compressed_data
 
     table = [""] * len(bwt)  # Make empty table
+    for i in range(len(bwt)):
+        table[i] = str(chr(bwt[i]) + table[i])
+        #print('unsorted = ', table)
+    table = sorted(table)
+    #print('sorted    =', table)
 
-    for _ in range(len(bwt)):
-        table = [bwt[i] + table[i] for i in range(len(bwt))]  # Add a column of r
-        print('unsorted = ', table)
-        table = sorted(table)
-        print('sorted    =', table)
+    inverse_bwt = [row for row in table if row.endswith("£")][0]  # Find the correct row (ending in £)
 
-        inverse_bwt = [row for row in table if row.endswith("£")][0]  # Find the correct row (ending in £)
+    # Get rid of start and end markers
+    inverse_bwt = inverse_bwt.rstrip("£")
+    print(len(inverse_bwt))
 
-        # Get rid of start and end markers
-        inverse_bwt = inverse_bwt.rstrip("£")
-
-        with open("./decoded/decodedBWT"+fich, "wb") as f:
-            f.write(bytearray(inverse_bwt.encode()))
-            f.close()
+    with open("./decoded/decodedBWT"+fich, "wb") as f:
+        f.write(bytearray(inverse_bwt.encode()))
+        f.close()
 
 
 

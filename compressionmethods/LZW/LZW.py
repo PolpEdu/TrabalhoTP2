@@ -8,7 +8,6 @@ from struct import *
 from numpy import byte
 
 def compress(name, data, code_width):
-    
 
     # taking the input file and the number of bits from command line
     # defining the maximum table size

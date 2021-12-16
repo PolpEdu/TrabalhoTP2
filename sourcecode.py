@@ -80,7 +80,7 @@ def main():
         BWT.decode(file)
         end = time.time()
         print(f"BWT encode e decode: {end-start:.5f} segundos")
-        #checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
+        checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
 
         #
         #
