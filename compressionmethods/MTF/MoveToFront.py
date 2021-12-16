@@ -5,11 +5,11 @@ from struct import *
  
 def move2front_encode(name,strng, symboltable):
     sequence, pad = [], symboltable[::]
+    
     for char in strng:
         indx = pad.index(char)
         sequence.append(indx)
         pad = [pad.pop(indx)] + pad
-
 
     output_file = open("./encoded/"+name.split(".")[0] + ".mtf", "wb")
     for data in sequence:

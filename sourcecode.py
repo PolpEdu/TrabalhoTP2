@@ -49,8 +49,8 @@ def main():
         #
         # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
         start = time.time()
-        hf.Huffman_encode(data, file)
-        hf.Huffman_decode(file)
+        #hf.Huffman_encode(data, file)
+        #hf.Huffman_decode(file)
         end = time.time()
         print(f"HUFFMAN encode e decode: {end-start:.5f} segundos")
         checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
@@ -66,8 +66,8 @@ def main():
         # LZW CODEC
         MAX_WIDTH = 12
         start = time.time()
-        LZW.compress(file, data, MAX_WIDTH)
-        LZW.decompress(file)
+        #LZW.compress(file, data, MAX_WIDTH)
+        #LZW.decompress(file)
         end = time.time()
         print(f"LZW encode e decode: {end-start:.5f} segundos")
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)

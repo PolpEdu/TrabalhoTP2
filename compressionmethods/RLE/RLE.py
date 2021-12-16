@@ -60,15 +60,14 @@ def decompressRLE(file):
             decoded_message = decoded_message+run_word
             j = j + 1
         i = i + 2
-    return decoded_message
 
 
     # storing the decompressed string into a file.
     output_file = open("./decoded/decodedRLE"+file, "wb")
-    output_file.write(bytearray(seq.encode()))
+    output_file.write(bytearray(decoded_message.encode()))
         
     output_file.close()
-    return seq
+    return decoded_message
 
 
 def testeRLE():
