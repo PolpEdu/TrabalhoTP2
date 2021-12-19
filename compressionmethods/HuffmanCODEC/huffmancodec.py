@@ -94,7 +94,6 @@ class PrefixCodec:
         """
         return self._table
 
-    
     def get_code_len(self):
         """
         Author: RPP, 2020.11.09
@@ -102,12 +101,11 @@ class PrefixCodec:
         :return: 2 lists: symbols and code length per symbol
         """
         t = self._table
-        symbols = sorted(t.keys())  #symbols
-        values = [t[s] for s in symbols] #list(t.values())[1:]
-        lengths = [v[0] for v in values] #symbol lengths
-        
-        return symbols, lengths
+        symbols = sorted(t.keys())  # symbols
+        values = [t[s] for s in symbols]  # list(t.values())[1:]
+        lengths = [v[0] for v in values]  # symbol lengths
 
+        return symbols, lengths
 
     def print_code_table(self, out=sys.stdout):
         """
@@ -118,7 +116,8 @@ class PrefixCodec:
         columns = list(zip(*itertools.chain(
             [('Bits', 'Code', 'Value', 'Symbol')],
             (
-                (str(bits), bin(val)[2:].rjust(bits, '0'), str(val), repr(symbol))
+                (str(bits), bin(val)[2:].rjust(
+                    bits, '0'), str(val), repr(symbol))
                 for symbol, (bits, val) in self._table.items()
             )
         )))
@@ -273,7 +272,7 @@ class HuffmanCodec(PrefixCodec):
         heap = [(f, [(s, (0, 0))]) for s, f in frequencies.items()]
         # Add EOF symbol.
         if eof not in frequencies:
-            #adicionar o EOF simbol
+            # adicionar o EOF simbol
             heap.append((1, [(eof, (0, 0))]))
 
         # Use heapq approach to build the encodings of the huffman tree leaves.
@@ -307,20 +306,21 @@ class HuffmanCodec(PrefixCodec):
         return cls.from_frequencies(frequencies, concat=_guess_concat(data))
 
 
-#-------------------- author: RPP, 2020.09.11
+# -------------------- author: RPP, 2020.09.11
 def main():
     #codec = HuffmanCodec.from_data('hello world how are you doing today foo bar lorem ipsum')
-    codec = HuffmanCodec.from_data([101, 102, 101, 102, 101, 102, 101, 100, 100, 104])
+    codec = HuffmanCodec.from_data(
+        [101, 102, 101, 102, 101, 102, 101, 100, 100, 104])
     t = codec.get_code_table()
     print(t)
     s, l = codec.get_code_len()
     print(s)
     print(l)
-    
-def Huffman_encode(data,file_name):
+
+
+def Huffman_encode(data, file_name):
     codec = HuffmanCodec.from_data(data)
     symbols, length = codec.get_code_len()
-    #save to file
     codec.save('./encoded/'+file_name.split(".")[0]+'.huffTable')
 
     bytes_encoded = codec.encode(data)
@@ -328,17 +328,19 @@ def Huffman_encode(data,file_name):
     output_file.write(bytes_encoded)
     output_file.close()
 
-    return symbols, length
-    
+    print(symbols, length, len(bytes_encoded))
+    return len(symbols) + len(length), len(bytes_encoded)
+
 
 def Huffman_decode(file):
     codec = HuffmanCodec.load("./encoded/"+file.split(".")[0]+'.huffTable')
-    data = codec.decode(open("./encoded/"+file.split(".")[0]+".huffData", "rb").read())
+    data = codec.decode(open("./encoded/"+file.split(".")
+                             [0]+".huffData", "rb").read())
 
     output_file = open("./decoded/decodedHuffman"+file, "wb")
     output_file.write(bytearray(data.encode()))
     output_file.close()
-    
+
 
 if __name__ == "__main__":
     main()

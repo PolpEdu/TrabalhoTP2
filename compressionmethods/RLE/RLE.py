@@ -1,11 +1,13 @@
 from struct import *
 
+
 def compressRLE(file, message):
     encoding = ''
     prev_char = ''
     count = 1
 
-    if not message: return ''
+    if not message:
+        return ''
 
     for char in message:
         # If the prev and current characters
@@ -26,17 +28,17 @@ def compressRLE(file, message):
         encoding += str(count) + prev_char
 
         output_file = open("./encoded/"+file.split(".")[0] + ".rle", "wb")
-        for data in encoding: # DA stora a um elemento da data
-            #cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
-            output_file.write(pack('>B',ord(data))) 
-            
+        for data in encoding:  # DA stora a um elemento da data
+            # cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
+            output_file.write(pack('>B', ord(data)))
+
         output_file.close()
 
         return encoding
 
 
-def decompressRLE(file):
-    file = open("./encoded/"+file.split(".")[0]+".rle", "rb")
+def decompressRLE(filename):
+    file = open("./encoded/"+filename.split(".")[0]+".rle", "rb")
     compressed_data = []
     # Reading the compressed file.
     while True:
@@ -46,37 +48,24 @@ def decompressRLE(file):
         (data, ) = unpack('>B', rec)
         compressed_data.append(data)
     file.close()
-    
-    decoded_message = ""
-    i = 0
-    j = 0
-    # splitting the encoded message into respective counts
-    while (i <= len(compressed_data) - 1):
-        run_count = int(compressed_data[i])
-        run_word = compressed_data[i + 1]
-        # displaying the character multiple times specified by the count
-        for j in range(run_count):
-            # concatenated with the decoded message
-            decoded_message = decoded_message+run_word
-            j = j + 1
-        i = i + 2
 
+    decode = ''
+    count = ''
+    for char in compressed_data:
+        c = chr(char)
+        if c.isdigit():
+            # ...append it to our count
+            count += c
+        else:
+            # Otherwise we've seen a non-numerical
+            # character and need to expand it for
+            # the decoding
+            decode += c * int(count)
+            count = ''
 
     # storing the decompressed string into a file.
-    output_file = open("./decoded/decodedRLE"+file, "wb")
-    output_file.write(bytearray(decoded_message.encode()))
-        
+    output_file = open("./decoded/decodedRLE"+filename, "wb")
+    output_file.write(bytearray(decode.encode()))
+
     output_file.close()
-    return decoded_message
-
-
-def testeRLE():
-    # the original string
-    our_message = "AuuBBBCCCCCCcccccCCCCCCCCCA"
-    # pass in the original string
-    encoded_message = compressRLE(our_message)
-    # pass in the decoded string
-    decoded_message = decompressRLE(encoded_message)
-    print("Original string: [" + our_message + "]")
-    print("Encoded string: [" + encoded_message + "]")
-    print("Decoded string: [" + decoded_message + "]")
+    return decode

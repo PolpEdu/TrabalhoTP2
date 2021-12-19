@@ -6,10 +6,13 @@ import compressionmethods.LZW.LZW as LZW
 import compressionmethods.HuffmanCODEC.huffmancodec as hf
 import compressionmethods.BWT.Burrows_Wheeler as BWT
 import compressionmethods.RLE.RLE as RLE
+import compressionmethods.LZWHUFFMAN.lzwhuffman as LZWHUF
 from DataInfo import *
 import time
+import sys
 
 FILES = ["bible.txt", "finance.csv", "jquery-3.6.0.js", "random.txt"]
+MAX_WIDTH = 12
 
 
 def main():
@@ -18,7 +21,8 @@ def main():
 
         print("Nome: "+file)
         data, alfabeto = read(file)
-        print("Tamanho data: "+str(len(data)) +
+        tamanhooriginal = len(data)
+        print("Tamanho data: "+str(tamanhooriginal) +
               " bytes, tamanho alfabeto: "+str(len(alfabeto)))
 
         ocorrencias = DataInfo.get_ocorrencias(data, alfabeto)
@@ -37,10 +41,20 @@ def main():
         #
         # Move to front
         start = time.time()
-        MTF.move2front_encode(file, data, alfabeto)
-        MTF.move2front_decode(file, alfabeto)
+        compressedfilesize = MTF.move2front_encode(file, data, alfabeto)
         end = time.time()
-        print(f"MTF encode e decode: {end-start:.5f} segundos")
+        print(f"MTF encode: {end-start:.5f} segundos")
+
+        filesize = MTF.move2front_decode(file, alfabeto)
+        end = time.time()
+        print(f"MTF decode: {end-start:.5f} segundos")
+
+        compressionrate = (compressedfilesize / tamanhooriginal)*100
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
+
         checkfiles("./decoded/decodedMTF"+file, "./dataset/"+file)
 
         #
@@ -49,10 +63,20 @@ def main():
         #
         # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
         start = time.time()
-        #hf.Huffman_encode(data, file)
-        #hf.Huffman_decode(file)
+        table, data = hf.Huffman_encode(data, file)
+        compressedfilesize = table + data
         end = time.time()
-        print(f"HUFFMAN encode e decode: {end-start:.5f} segundos")
+        print(f"Huffman encode: {end-start:.5f}s")
+
+        hf.Huffman_decode(file)
+        end = time.time()
+        print(f"HUFFMAN decode: {end-start:.5f} segundos")
+        compressionrate = (compressedfilesize / tamanhooriginal)*100
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+
         checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
 
         # print(
@@ -64,23 +88,46 @@ def main():
         # 8 BITS - DATA SET COM 2^8 ENTRADAS
         # MAX_WIDTH não pode ser maior que 16 porque 2*8 = 16 bits
         # LZW CODEC
-        MAX_WIDTH = 12
         start = time.time()
-        #LZW.compress(file, data, MAX_WIDTH)
-        #LZW.decompress(file)
+
+        compressed_data = LZW.compress(file, data, MAX_WIDTH)
+        LZW.writetofile(compressed_data, file)
         end = time.time()
-        print(f"LZW encode e decode: {end-start:.5f} segundos")
+        print(f"LZW encode: {end-start:.5f} segundos")
+
+        readcompressed_LZW_data = LZW.readfromfile(file)
+        decoded = LZW.decompress(readcompressed_LZW_data)
+        LZW.writeoutputDECtofile("./decoded/decodedLZW"+file, decoded)
+
+        end = time.time()
+        print(f"LZW decode: {end-start:.5f} segundos")
+        compressionrate = (compressed_data / tamanhooriginal)*100
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
 
         # print(
         #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
 
+        BLOCKSIZE = 100
         start = time.time()
-        BWT.encode(file, data, 5000)
-        BWT.decode(file)
+        BWT.encode(file, data, BLOCKSIZE)
         end = time.time()
-        print(f"BWT encode e decode: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
+        print(f"BWT encode: {end-start:.5f} segundos")
+
+        BWT.decode(file, BLOCKSIZE)
+        end = time.time()
+        print(f"BWT decode: {end-start:.5f} segundos")
+
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+
+        # checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
 
         #
         #
@@ -88,14 +135,36 @@ def main():
         #
         # RLE CODEC
         start = time.time()
-        RLE.compressRLE(file, data)
-        RLE.decompressRLE(file)
+        # RLE.compressRLE(file, data)
         end = time.time()
-        print(f"RLE: {end-start:.5f} segundos")
-        checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
+        print(f"RLE encode: {end-start:.5f} segundos")
 
-        print("\n")
-    return
+        # RLE.decompressRLE(file)
+        end = time.time()
+        print(f"RLE decode: {end-start:.5f} segundos")
+        # checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
+
+        #
+        #
+        #
+        #
+        # lzw+huffman
+        start = time.time()
+        compressedfilesize = LZWHUF.lzwHuffmanenc(file, data)
+        end = time.time()
+        print(f"ENCODE LZW+HUFFMAN: {end-start:.5f} segundos")
+        filesize = LZWHUF.lzwHuffmandec(file)
+        end = time.time()
+        print(f"DECODE: LZW+HUFFMAN: {end-start:.5f} segundos")
+
+        compressionrate = (compressedfilesize/tamanhooriginal)*100
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+
+        checkfiles(
+            "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
 
 
 def read(filename):
@@ -124,14 +193,22 @@ def read(filename):
 def checkfiles(PATH1, PATH2):
     # check where the given files are different
     with open(PATH1, "r") as f:
-        with open(PATH2, "r") as f2:
-            for line in f:
-                if line != f2.readline():
-                    print("DIFERENTE em: ")
-                    print(line)
-                    break
-            else:
-                print("Ficheiro descomprimido e original iguais")
+        lido1 = f.readlines()
+        f.close()
+
+    with open(PATH2, "r") as f2:
+        lido2 = f2.readlines()
+        f2.close()
+
+    hashedfirst = hash(frozenset(lido1))
+    hashedsecond = hash(frozenset(lido2))
+    # print(hashedfirst)
+    # print(hashedsecond)
+    if hashedfirst == hashedsecond:
+        print("Ficheiro descomprimido e original iguais")
+    else:
+        print("Ficheiro descomprimido e original diferentes")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

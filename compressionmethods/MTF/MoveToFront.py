@@ -1,47 +1,61 @@
 from __future__ import print_function
 from string import ascii_letters
 from struct import *
+import sys
 
- 
-def move2front_encode(name,strng, symboltable):
+
+def writetofile(name, sequence):
+    output_file = open("./encoded/"+name.split(".")[0] + ".mtf", "wb")
+    for data in sequence:
+        # B para ser 1 bytes, não vou usar int (>H) para não gastar espaço desnecessário
+        if data > 256:
+            print("Error: data > 256")
+            sys.exit(1)
+
+        output_file.write(pack('>B', data))
+
+    output_file.close()
+
+    return len(sequence)
+
+
+def move2front_encode(name, strng, symboltable):
     sequence, pad = [], symboltable[::]
-    
     for char in strng:
         indx = pad.index(char)
         sequence.append(indx)
         pad = [pad.pop(indx)] + pad
 
-    output_file = open("./encoded/"+name.split(".")[0] + ".mtf", "wb")
-    for data in sequence:
-        output_file.write(pack('>H',int(data)))
-        
-    output_file.close()
+    lenght = writetofile(name, sequence)
 
-    return sequence
- 
-def move2front_decode(name,symboltable):
+    return lenght
+
+
+def move2front_decode(name, symboltable):
     input_file = open("./encoded/"+name.split(".")[0] + ".mtf", "rb")
     sequence = []
     while True:
-        data = input_file.read(2)
-        if not data: break
-        sequence.append(unpack('>H',data)[0])
+        data = input_file.read(1)
+        if not data:
+            break
+        sequence.append(unpack('>B', data)[0])
 
     chars, pad = [], symboltable[::]
     for indx in sequence:
         char = pad[indx]
         chars.append(char)
         pad = [pad.pop(indx)] + pad
-    
-    to_encode ="".join(chars)
+
+    decoded = "".join(chars)
 
     output_file = open("./decoded/decodedMTF"+name, "wb")
-    #escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
-    output_file.write(bytearray(to_encode.encode())) 
+    # escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
+    output_file.write(bytearray(decoded.encode()))
     output_file.close()
-    
-    return ''.join(chars)
- 
+
+    return len(decoded)
+
+
 if __name__ == '__main__':
     SYMBOLTABLE = list(ascii_letters)
     for s in ['broood', 'bananaaa', 'hiphophiphop']:

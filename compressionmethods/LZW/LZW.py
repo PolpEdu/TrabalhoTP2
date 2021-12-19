@@ -7,26 +7,36 @@ from struct import *
 
 from numpy import byte
 
+
+def writetofile(compressed_data, name):
+    # storing the compressed string into a file (byte-wise).
+    output_file = open("./encoded/"+name.split(".")[0] + ".lzw", "wb")
+    for data in compressed_data:  # DA stora a um elemento da data
+        # cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
+        output_file.write(pack('>H', int(data)))
+
+    output_file.close()
+
+
 def compress(name, data, code_width):
 
     # taking the input file and the number of bits from command line
     # defining the maximum table size
     # opening the input file
     # reading the input file and storing the file data into data variable
-    maximum_table_size = pow(2,int(code_width))                     
+    maximum_table_size = pow(2, int(code_width))
 
     # Building and initializing the dictionary.
-    dictionary_size = 256   #no maximo o dicionario tem 256 elemtnos                
-    dictionary = {chr(i): i for i in range(dictionary_size)}    
+    dictionary_size = 256  # no maximo o dicionario tem 256 elemtnos
+    dictionary = {chr(i): i for i in range(dictionary_size)}
     string = ""             # String is null.
     compressed_data = []    # variable to store the compressed data.
 
-
     # iterating through the input symbols.
     # LZW Compression algorithm
-    for symbol in data:                     
-        string_plus_symbol = string + symbol # get input symbol.
-        if string_plus_symbol in dictionary: 
+    for symbol in data:
+        string_plus_symbol = string + symbol  # get input symbol.
+        if string_plus_symbol in dictionary:
             string = string_plus_symbol
         else:
             compressed_data.append(dictionary[string])
@@ -38,27 +48,12 @@ def compress(name, data, code_width):
     if string in dictionary:
         compressed_data.append(dictionary[string])
 
-    # storing the compressed string into a file (byte-wise).
-    output_file = open("./encoded/"+name.split(".")[0] + ".lzw", "wb")
-    for data in compressed_data: # DA stora a um elemento da data
-        #cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
-        output_file.write(pack('>H',int(data))) 
-        
-    output_file.close()
+    return compressed_data
 
 
-
-def decompress(input_file):
-
-    # taking the compressed file input and the number of bits from command line
-    # defining the maximum table size
-    # opening the compressed file
-    # defining variables
-    file = open("./encoded/"+input_file.split(".")[0]+".lzw", "rb")
+def readfromfile(input_file):
     compressed_data = []
-    next_code = 256
-    decompressed_data = ""
-    string = ""
+    file = open("./encoded/"+input_file.split(".")[0]+".lzw", "rb")
 
     # Reading the compressed file.
     while True:
@@ -69,6 +64,14 @@ def decompress(input_file):
         compressed_data.append(data)
 
     file.close()
+
+    return compressed_data
+
+
+def decompress(compressed_data):
+    next_code = 256
+    decompressed_data = ""
+    string = ""
 
     # Building and initializing the dictionary.
     dictionary_size = 256
@@ -85,9 +88,14 @@ def decompress(input_file):
             next_code += 1
         string = dictionary[code]
 
-    to_encode = "".join(decompressed_data)
+    decompressedstr = "".join(decompressed_data)
+
+    return decompressedstr
+
+
+def writeoutputDECtofile(input_file, strdecompressed):
     # storing the decompressed string into a file.
-    output_file = open("./decoded/decodedLZW"+input_file, "wb")
-    output_file.write(bytearray(to_encode.encode()))
-        
+    output_file = open(input_file, "wb")
+    output_file.write(bytearray(strdecompressed.encode()))
+
     output_file.close()
