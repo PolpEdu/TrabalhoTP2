@@ -49,7 +49,7 @@ def main():
         end = time.time()
         print(f"MTF decode: {end-start:.5f} segundos")
 
-        compressionrate = (compressedfilesize / tamanhooriginal)*100
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
               f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
               f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
@@ -63,19 +63,25 @@ def main():
         #
         # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
         start = time.time()
-        table, data = hf.Huffman_encode(data, file)
-        compressedfilesize = table + data
+        hf.Huffman_encode(data, file)
         end = time.time()
-        print(f"Huffman encode: {end-start:.5f}s")
-
+        print(f"HUFFMAN encode: {end-start:.5f}s")
         hf.Huffman_decode(file)
         end = time.time()
+
+        tablesize = os.stat(
+            './encoded/'+file.split(".")[0]+'.huffTable').st_size
+
+        huffdata = os.stat('./encoded/'+file.split(".")[0]+'.huffData').st_size
+
+        compressedfilesize = tablesize+huffdata
+
         print(f"HUFFMAN decode: {end-start:.5f} segundos")
-        compressionrate = (compressedfilesize / tamanhooriginal)*100
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
               f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes, table size:{tablesize} bytes e tree size:{huffdata} bytes\n",
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
 
         checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
 
@@ -98,14 +104,19 @@ def main():
         readcompressed_LZW_data = LZW.readfromfile(file)
         decoded = LZW.decompress(readcompressed_LZW_data)
         LZW.writeoutputDECtofile("./decoded/decodedLZW"+file, decoded)
-
         end = time.time()
         print(f"LZW decode: {end-start:.5f} segundos")
-        compressionrate = (compressed_data / tamanhooriginal)*100
+
+        compressedfilesize = os.stat(
+            './encoded/'+file.split(".")[0]+'.lzw').st_size
+
+        filesize = os.stat('./decoded/decodedLZW'+file).st_size
+
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
               f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
               f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
 
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
 
@@ -114,18 +125,18 @@ def main():
 
         BLOCKSIZE = 100
         start = time.time()
-        BWT.encode(file, data, BLOCKSIZE)
+        compressedfilesize = BWT.encode(file, data, BLOCKSIZE)
         end = time.time()
         print(f"BWT encode: {end-start:.5f} segundos")
 
-        BWT.decode(file, BLOCKSIZE)
+        filesize = BWT.decode(file, BLOCKSIZE)
         end = time.time()
         print(f"BWT decode: {end-start:.5f} segundos")
-
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
               f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
               f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
 
         # checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
 
@@ -150,21 +161,35 @@ def main():
         #
         # lzw+huffman
         start = time.time()
-        compressedfilesize = LZWHUF.lzwHuffmanenc(file, data)
+        LZWHUF.lzwHuffmanenc(file, data)
         end = time.time()
         print(f"ENCODE LZW+HUFFMAN: {end-start:.5f} segundos")
-        filesize = LZWHUF.lzwHuffmandec(file)
+        LZWHUF.lzwHuffmandec(file)
         end = time.time()
         print(f"DECODE: LZW+HUFFMAN: {end-start:.5f} segundos")
+        compressedfilesize = os.stat(
+            "./compressionmethods/LZWHUFFMAN/" +
+            file.split(".")[0]+".LZWhuffData").st_size+os.stat(
+            "./compressionmethods/LZWHUFFMAN/" +
+            file.split(".")[0]+".LZWhuffTable").st_size
 
-        compressionrate = (compressedfilesize/tamanhooriginal)*100
+        filesize = os.stat(
+            "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file).st_size
+
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
               f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
               f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de descompressão: {compressionrate:.02f} %\n")
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
 
         checkfiles(
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
+
+
+def calcrate(originalfilesize, compressedfilesize):
+    compressionrate = ((originalfilesize-compressedfilesize) /
+                       originalfilesize)*100
+    return compressionrate
 
 
 def read(filename):

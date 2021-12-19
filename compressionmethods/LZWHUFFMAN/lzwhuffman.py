@@ -18,8 +18,6 @@ def lzwHuffmanenc(file_name, data):
     output_file.write(bytes_encoded)
     output_file.close()
 
-    return len(bytes_encoded)+len(symbols)+len(length)
-
 
 def lzwHuffmandec(file):
     codec = HuffmanCodec.load(
@@ -32,4 +30,3 @@ def lzwHuffmandec(file):
     lenght = len(strdecompressed)
     LZW.writeoutputDECtofile(
         "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, strdecompressed)
-    return lenght

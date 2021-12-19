@@ -328,9 +328,6 @@ def Huffman_encode(data, file_name):
     output_file.write(bytes_encoded)
     output_file.close()
 
-    print(symbols, length, len(bytes_encoded))
-    return len(symbols) + len(length), len(bytes_encoded)
-
 
 def Huffman_decode(file):
     codec = HuffmanCodec.load("./encoded/"+file.split(".")[0]+'.huffTable')

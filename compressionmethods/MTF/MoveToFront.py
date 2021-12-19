@@ -16,8 +16,6 @@ def writetofile(name, sequence):
 
     output_file.close()
 
-    return len(sequence)
-
 
 def move2front_encode(name, strng, symboltable):
     sequence, pad = [], symboltable[::]
@@ -25,8 +23,8 @@ def move2front_encode(name, strng, symboltable):
         indx = pad.index(char)
         sequence.append(indx)
         pad = [pad.pop(indx)] + pad
-
-    lenght = writetofile(name, sequence)
+    lenght = len(sequence)
+    writetofile(name, sequence)
 
     return lenght
 
