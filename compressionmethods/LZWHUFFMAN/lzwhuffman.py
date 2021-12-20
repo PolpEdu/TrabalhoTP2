@@ -1,9 +1,8 @@
 import compressionmethods.LZW.LZW as LZW
 from compressionmethods.HuffmanCODEC.huffmancodec import *
-MAX_WIDTH = 12
 
 
-def lzwHuffmanenc(file_name, data):
+def lzwHuffmanenc(file_name, data, MAX_WIDTH):
     compressed_data_LZW = LZW.compress(file_name, data, MAX_WIDTH)
 
     codec = HuffmanCodec.from_data(compressed_data_LZW)

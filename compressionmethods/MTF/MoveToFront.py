@@ -5,31 +5,32 @@ import sys
 
 
 def writetofile(name, sequence):
-    output_file = open("./encoded/"+name.split(".")[0] + ".mtf", "wb")
+    output_file = open(name, "wb")
     for data in sequence:
+
         # B para ser 1 bytes, não vou usar int (>H) para não gastar espaço desnecessário
-        if data > 256:
-            print("Error: data > 256")
+        print(data)
+        if data > 255:
+            print("Error: data > 255")
             sys.exit(1)
 
         output_file.write(pack('>B', data))
 
     output_file.close()
+    return len(sequence)
 
 
-def move2front_encode(name, strng, symboltable):
+def move2front_encode(strng, symboltable):
     sequence, pad = [], symboltable[::]
     for char in strng:
         indx = pad.index(char)
         sequence.append(indx)
         pad = [pad.pop(indx)] + pad
-    lenght = len(sequence)
-    writetofile(name, sequence)
 
-    return lenght
+    return sequence
 
 
-def move2front_decode(name, symboltable):
+def readfile(name):
     input_file = open("./encoded/"+name.split(".")[0] + ".mtf", "rb")
     sequence = []
     while True:
@@ -37,6 +38,17 @@ def move2front_decode(name, symboltable):
         if not data:
             break
         sequence.append(unpack('>B', data)[0])
+    return sequence
+
+
+def outputfile(name):
+    output_file = open(name, "wb")
+    # escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
+    output_file.write(bytearray(decoded.encode()))
+    output_file.close()
+
+
+def move2front_decode(sequence, symboltable):
 
     chars, pad = [], symboltable[::]
     for indx in sequence:
@@ -46,12 +58,7 @@ def move2front_decode(name, symboltable):
 
     decoded = "".join(chars)
 
-    output_file = open("./decoded/decodedMTF"+name, "wb")
-    # escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
-    output_file.write(bytearray(decoded.encode()))
-    output_file.close()
-
-    return len(decoded)
+    return decoded
 
 
 if __name__ == '__main__':

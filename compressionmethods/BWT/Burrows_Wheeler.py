@@ -5,7 +5,7 @@ import compressionmethods.BWT.BWTSRC as bw
 import math as m
 
 
-def encode(fich, data, blocksize):
+def encode(data, blocksize):
     numero = m.ceil(len(data)/blocksize)
     final_string = ""
     for i in range(numero):
@@ -28,7 +28,7 @@ def writetofileENC(fich, final_string):
     return len(final_string)
 
 
-def decode(fich, blocksize):
+def readfileENC(fich):
     file = open("./encoded/"+fich.split(".")[0]+".bwt", "rb")
     bwt = ""
     # Reading the compressed file.
@@ -39,6 +39,10 @@ def decode(fich, blocksize):
         (data, ) = unpack('>B', rec)  # unpack with >B
         bwt += chr(data)
     file.close()
+    return bwt
+
+
+def decode(bwt, blocksize):
 
     final_string = ""
     blocksize += 2
@@ -57,7 +61,7 @@ def decode(fich, blocksize):
 
 
 def writetofileDEC(fich, final_string):
-    with open("./decoded/decodedBWT"+fich, "wb") as f:
+    with open(fich, "wb") as f:
         f.write(bytearray(final_string.encode()))
         f.close()
 
