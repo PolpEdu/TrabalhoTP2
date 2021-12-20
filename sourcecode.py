@@ -7,6 +7,7 @@ import compressionmethods.HuffmanCODEC.huffmancodec as hf
 import compressionmethods.BWT.Burrows_Wheeler as BWT
 import compressionmethods.RLE.RLE as RLE
 import compressionmethods.LZWHUFFMAN.lzwhuffman as LZWHUF
+import compressionmethods.BWTRLE.bwtrle as BWTRLE
 from DataInfo import *
 import time
 import sys
@@ -35,6 +36,7 @@ def main():
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
 
+        '''
         #
         #
         #
@@ -53,7 +55,7 @@ def main():
         print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
               f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
               f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
+              f"Taxa de compressão: {compressionrate:.02f} %")
 
         checkfiles("./decoded/decodedMTF"+file, "./dataset/"+file)
 
@@ -125,11 +127,13 @@ def main():
 
         BLOCKSIZE = 100
         start = time.time()
-        compressedfilesize = BWT.encode(file, data, BLOCKSIZE)
+        encoded_BWT = BWT.encode(file, data, BLOCKSIZE)
+        compressedfilesize = BWT.writetofileENC(file, encoded_BWT)
         end = time.time()
         print(f"BWT encode: {end-start:.5f} segundos")
 
-        filesize = BWT.decode(file, BLOCKSIZE)
+        decoded_BWT = BWT.decode(file, BLOCKSIZE)
+        filesize = BWT.writetofileDEC(file, decoded_BWT)
         end = time.time()
         print(f"BWT decode: {end-start:.5f} segundos")
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
@@ -138,7 +142,7 @@ def main():
               f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
               f"Taxa de compressão: {compressionrate:.02f} %\n")
 
-        # checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
+        checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
 
         #
         #
@@ -146,15 +150,27 @@ def main():
         #
         # RLE CODEC
         start = time.time()
-        # RLE.compressRLE(file, data)
+        encoding_RLE = RLE.compressRLE(file, data)
+        compressedfilesize = RLE.writetofileENC(file, encoding_RLE)
         end = time.time()
         print(f"RLE encode: {end-start:.5f} segundos")
 
-        # RLE.decompressRLE(file)
+        decoded_RLE = RLE.decompressRLE(file)
+        filesize = RLE.writetofileDEC(file, decoded_RLE)
         end = time.time()
         print(f"RLE decode: {end-start:.5f} segundos")
-        # checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
 
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
+
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
+
+        checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
+
+        #
+        #
         #
         #
         #
@@ -184,6 +200,38 @@ def main():
 
         checkfiles(
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
+'''
+        #
+        #
+        #
+        #
+        #
+        #
+        # BWT+RLE
+        start = time.time()
+        BLOCKSIZERLE = 100
+        BWTRLE.bwtrleenc(file, data, BLOCKSIZERLE)
+        end = time.time()
+        print(f"ENCODE BWT+RLE: {end-start:.5f} segundos")
+        BWTRLE.bwtrledec(file)
+        end = time.time()
+        print(f"DECODE: BWT+RLE: {end-start:.5f} segundos")
+
+        compressedfilesize = os.stat(
+            "./compressionmethods/BWTRLE/" +
+            file.split(".")[0]+".bwtrle").st_size
+
+        filesize = os.stat(
+            "./compressionmethods/BWTRLE/decodedBWTRLE"+file).st_size
+
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
+
+        checkfiles(
+            "./compressionmethods/BWTRLE/decodedBWTRLE"+file, "./dataset/"+file)
 
 
 def calcrate(originalfilesize, compressedfilesize):
@@ -230,9 +278,9 @@ def checkfiles(PATH1, PATH2):
     # print(hashedfirst)
     # print(hashedsecond)
     if hashedfirst == hashedsecond:
-        print("Ficheiro descomprimido e original iguais")
+        print("Ficheiro descomprimido e original iguais\n\n")
     else:
-        print("Ficheiro descomprimido e original diferentes")
+        print("Ficheiro descomprimido e original diferentes\n\n")
         sys.exit(1)
 
 

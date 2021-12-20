@@ -17,11 +17,14 @@ def encode(fich, data, blocksize):
         else:
             break
 
+    return final_string
+
+
+def writetofileENC(fich, final_string):
     with open("./encoded/"+fich.split(".")[0]+".bwt", "wb") as f:
         for i in range(0, len(final_string)):
             f.write(pack('>B', ord(final_string[i])))
         f.close()
-
     return len(final_string)
 
 
@@ -50,6 +53,10 @@ def decode(fich, blocksize):
         else:
             break
 
+    return final_string
+
+
+def writetofileDEC(fich, final_string):
     with open("./decoded/decodedBWT"+fich, "wb") as f:
         f.write(bytearray(final_string.encode()))
         f.close()

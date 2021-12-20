@@ -27,14 +27,18 @@ def compressRLE(file, message):
         # Finish off the encoding
         encoding += str(count) + prev_char
 
-        output_file = open("./encoded/"+file.split(".")[0] + ".rle", "wb")
-        for data in encoding:  # DA stora a um elemento da data
-            # cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
-            output_file.write(pack('>B', ord(data)))
-
-        output_file.close()
-
         return encoding
+
+
+def writetofileENC(file, encoding):
+    output_file = open("./encoded/"+file.split(".")[0] + ".rle", "wb")
+    for data in encoding:  # DA stora a um elemento da data
+        # cada elemento de um indice do dicionário é little endian ">" e ocupa 2 bytes "H" (ver documentação do pack() ), por isso a MAX_WIDTH NÃO PODE SER MAIOR QUE 16 bits
+        output_file.write(pack('>B', ord(data)))
+
+    output_file.close()
+
+    return len(encoding)
 
 
 def decompressRLE(filename):
@@ -63,9 +67,13 @@ def decompressRLE(filename):
             decode += c * int(count)
             count = ''
 
+    return decode
+
+
+def writetofileDEC(filename, decode):
     # storing the decompressed string into a file.
     output_file = open("./decoded/decodedRLE"+filename, "wb")
     output_file.write(bytearray(decode.encode()))
 
     output_file.close()
-    return decode
+    return len(decode)
