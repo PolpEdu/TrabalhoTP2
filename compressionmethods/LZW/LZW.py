@@ -19,11 +19,6 @@ def writetofile(compressed_data, name):
 
 
 def compress(name, data, code_width):
-
-    # taking the input file and the number of bits from command line
-    # defining the maximum table size
-    # opening the input file
-    # reading the input file and storing the file data into data variable
     maximum_table_size = pow(2, int(code_width))
 
     # Building and initializing the dictionary.

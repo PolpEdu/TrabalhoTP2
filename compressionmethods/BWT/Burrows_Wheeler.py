@@ -21,7 +21,7 @@ def encode(data, blocksize):
 
 
 def writetofileENC(fich, final_string):
-    with open("./encoded/"+fich.split(".")[0]+".bwt", "wb") as f:
+    with open(fich, "wb") as f:
         for i in range(0, len(final_string)):
             f.write(pack('>B', ord(final_string[i])))
         f.close()
@@ -54,15 +54,13 @@ def decode(bwt, blocksize):
         if part_of_string != "":
             inversed = bw.inverse(part_of_string)
             final_string += inversed
-        else:
-            break
 
     return final_string
 
 
 def writetofileDEC(fich, final_string):
-    with open(fich, "wb") as f:
-        f.write(bytearray(final_string.encode()))
-        f.close()
+    # storing the decompressed string into a file.
+    output_file = open(fich, "w")
+    output_file.write(final_string)
 
-    return len(final_string)
+    output_file.close()

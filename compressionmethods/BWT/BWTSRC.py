@@ -1,4 +1,4 @@
-START_CHAR = 'º'
+START_CHAR = '»'
 END_CHAR = '£'
 
 
@@ -46,7 +46,3 @@ if __name__ == '__main__':
     initial_string = 'banana sensual'
     transformed_string = transform(initial_string)
     final_string = inverse(transformed_string)
-
-    print('"{}" was transformed to "{}" and then back to "{}"'.format(
-        initial_string, transformed_string, final_string,
-    ))

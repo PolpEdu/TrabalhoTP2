@@ -2,11 +2,35 @@ import numpy as np
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import os
 
 
 class DataInfo:
-    def nrmediobitsLZ78():
-        return
+    def readfiledata(filename):
+        PATH = os.getcwd()+"\\dataset\\" + filename
+
+        with open(PATH, "r", encoding="ASCII") as f:
+            lido = f.readlines()
+            data = ""
+
+            for x in lido:
+                data += x
+
+            f.close()
+
+        # calcular o alfabeto ideal  com virgulas e pontos finais e letras do alfabeto grego normais.
+        alfabeto = []
+        for x in data:
+            if x not in alfabeto:
+                alfabeto.append(x)
+        alfabeto.sort()
+        return data, alfabeto
+
+    def printinfo(tamanhooriginal, filesize, compressedfilesize, compressionrate):
+        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
+              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
+              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
+              f"Taxa de compressão: {compressionrate:.02f} %\n")
 
     def nrmediobitsHuffman(length, symbols, ocorrencias, alfabeto):
         # criar uma lista com o mesmo tamanho das ocorrencias
@@ -69,4 +93,3 @@ class DataInfo:
         plt.xlabel('Alfabeto', fontsize=15)
         plt.ylabel('Ocorrencias', fontsize=15)
         plt.show()
-

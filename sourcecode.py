@@ -11,9 +11,10 @@ import compressionmethods.HuffmanCODEC.huffmancodec as hf
 import compressionmethods.BWT.Burrows_Wheeler as BWT
 import compressionmethods.RLE.RLE as RLE
 import compressionmethods.LZWHUFFMAN.lzwhuffman as LZWHUF
-import compressionmethods.BWTRLE.bwtrle as BWTRLE
+import compressionmethods.BWTRLE.encode as BWTRLEENC
+import compressionmethods.BWTRLE.decode as BWTRLEDEC
 import compressionmethods.MTFHUFF.MTFHUFFMAN as MTFHUFF
-
+import compressionmethods.BZIP2.BZIP2 as BZIP2
 
 FILES = ["bible.txt", "finance.csv", "jquery-3.6.0.js", "random.txt"]
 
@@ -23,8 +24,11 @@ def main():
     for file in FILES:
 
         print("Nome: "+file)
-        data, alfabeto = read(file)
-        tamanhooriginal = len(data)
+        data, alfabeto = DataInfo.readfiledata(file)
+
+        tamanhooriginal = os.stat(
+            './dataset/'+file).st_size
+
         print("Tamanho data: "+str(tamanhooriginal) +
               " bytes, tamanho alfabeto: "+str(len(alfabeto)))
 
@@ -37,7 +41,7 @@ def main():
         # limite mínimo teórico para o número médio de bits por símbolo NORMAL
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
-
+        '''
         #
         #
         #
@@ -57,10 +61,8 @@ def main():
         print(f"MTF decode: {end-start:.5f} segundos")
 
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %")
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedMTF"+file, "./dataset/"+file)
 
@@ -85,10 +87,8 @@ def main():
 
         print(f"HUFFMAN decode: {end-start:.5f} segundos")
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes, table size:{tablesize} bytes e tree size:{huffdata} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
 
@@ -120,58 +120,58 @@ def main():
         filesize = os.stat('./decoded/decodedLZW'+file).st_size
 
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
 
         # print(
-        #    f"Número médio de bits de {file} com codificação LZ78: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
+        #    f"Número médio de bits de {file} com codificação LZW: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
 
         BLOCKSIZE = 100
         start = time.time()
         encoded_BWT = BWT.encode(data, BLOCKSIZE)
-        compressedfilesize = BWT.writetofileENC(file, encoded_BWT)
+        compressedfilesize = BWT.writetofileENC(
+            "./encoded/"+file.split(".")[0]+".bwt", encoded_BWT)
         end = time.time()
         print(f"BWT encode: {end-start:.5f} segundos")
 
         decoded_BWT = BWT.decode(encoded_BWT, BLOCKSIZE)
-        filesize = BWT.writetofileDEC(file, decoded_BWT)
+        filesize = BWT.writetofileDEC(
+            "./decoded/decodedBWT"+file, decoded_BWT)
         end = time.time()
         print(f"BWT decode: {end-start:.5f} segundos")
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
-
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
         checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
-
         #
         #
         #
         #
         # RLE CODEC
         start = time.time()
-        encoding_RLE = RLE.compressRLE(file, data)
-        compressedfilesize = RLE.writetofileENC(file, encoding_RLE)
+        encoding_RLE = RLE.compressRLE(data)
+        # print(encoding_RLE)
+        RLE.writetofileENC(file, encoding_RLE)
         end = time.time()
         print(f"RLE encode: {end-start:.5f} segundos")
 
         rle_encoded = RLE.readfromfile("./encoded/"+file.split(".")[0]+".rle")
         decoded_RLE = RLE.decompressRLE(rle_encoded)
-        filesize = RLE.writetofileDEC(file, decoded_RLE)
+        RLE.writetofileDEC(file, decoded_RLE)
         end = time.time()
         print(f"RLE decode: {end-start:.5f} segundos")
 
+        compressedfilesize = os.stat(
+            './encoded/'+file.split(".")[0]+'.rle').st_size
+
+        filesize = os.stat('./decoded/decodedRLE'+file).st_size
+
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
 
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
 
@@ -201,14 +201,12 @@ def main():
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file).st_size
 
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles(
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
-
+        '''
         #
         #
         #
@@ -217,11 +215,16 @@ def main():
         #
         # BWT+RLE
         start = time.time()
-        BLOCKSIZERLE = 100
-        BWTRLE.bwtrleenc(file, data, BLOCKSIZERLE)
+        encoded = BWTRLEENC.bwt_rle(
+            "./compressionmethods/BWTRLE/"+file.split(".")[0]+".bwtrle", data)
+
         end = time.time()
         print(f"ENCODE BWT+RLE: {end-start:.5f} segundos")
-        BWTRLE.bwtrledec(file)
+
+        decoded = BWTRLEDEC.decode("./compressionmethods/BWTRLE/" +
+                                   file.split(".")[0]+".bwtrle", BWTRLEDEC)
+        BWTRLEDEC.writetofile(
+            "./compressionmethods/BWTRLE/decodedBWTRLE"+file, decoded)
         end = time.time()
         print(f"DECODE BWT+RLE: {end-start:.5f} segundos")
 
@@ -233,10 +236,9 @@ def main():
             "./compressionmethods/BWTRLE/decodedBWTRLE"+file).st_size
 
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %")
+
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles(
             "./compressionmethods/BWTRLE/decodedBWTRLE"+file, "./dataset/"+file)
@@ -256,51 +258,62 @@ def main():
         print(f"DECODE MTF+HUFF: {end-start:.5f} segundos")
 
         compressedfilesize = os.stat(
-            "./compressionmethods/MTFHUFFMAN/" +
+            "./compressionmethods/MTFHUFF/" +
             file.split(".")[0]+".LZWhuffData").st_size + os.stat(
-            "./compressionmethods/MTFHUFFMAN/" +
+            "./compressionmethods/MTFHUFF/" +
             file.split(".")[0]+".LZWhuffTable").st_size
 
         filesize = os.stat(
-            "./compressionmethods/MTFHUFFMAN/decodedMTFHUFF"+file).st_size
+            "./compressionmethods/MTFHUFF/decodedMTFHUFF"+file).st_size
 
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        print(f" Tamanho do ficheiro original: {tamanhooriginal} bytes\n",
-              f"Tamanho do ficheiro apos a sua codificação e descodificação: {filesize} bytes\n",
-              f"Tamanho do ficheiro comprimido: {compressedfilesize} bytes\n",
-              f"Taxa de compressão: {compressionrate:.02f} %\n")
+
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
         checkfiles(
-            "./compressionmethods/MTFHUFFMAN/decodedMTFHUFF"+file, "./dataset/"+file)
+            "./compressionmethods/MTFHUFF/decodedMTFHUFF"+file, "./dataset/"+file)
+
+        #
+        #
+        #
+        #
+        # BZIP2
+        with open("./dataset/"+file, "rb") as fh:
+            data = fh.read()
+        fh.close()  # read data in binary
+
+        start = time.time()
+        encoded = BZIP2.compress(data)
+        end = time.time()
+
+        BZIP2.writetofileENC(
+            "./compressionmethods/BZIP2/"+file.split(".")[0]+".bzip2", encoded)
+
+        print(f"ENCODE BZIP2: {end-start:.5f} segundos")
+
+        decoded = BZIP2.decompress(encoded)
+        end = time.time()
+
+        BZIP2.writetofile(
+            "./compressionmethods/BZIP2/decodedBZIP2"+file, decoded)
+
+        print(f"DECODE BZIP2: {end-start:.5f} segundos")
+
+        compressedfilesize = os.stat(
+            "./compressionmethods/BZIP2/"+file.split(".")[0]+".bzip2").st_size
+        filesize = os.stat(
+            "./compressionmethods/BZIP2/decodedBZIP2"+file).st_size
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
+
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
 
 
 def calcrate(originalfilesize, compressedfilesize):
     compressionrate = ((originalfilesize-compressedfilesize) /
                        originalfilesize)*100
     return compressionrate
-
-
-def read(filename):
-    PATH = os.getcwd()+"\\dataset\\" + filename
-
-    with open(PATH, "r", encoding="ASCII") as f:
-        lido = f.readlines()
-        data = ""
-
-        for x in lido:
-            data += x
-
-        f.close()
-
-    # calcular o alfabeto ideal  com virgulas e pontos finais e letras do alfabeto grego normais.
-    alfabeto = []
-    for x in data:
-        if x not in alfabeto:
-            alfabeto.append(x)
-    alfabeto.sort()
-    return data, alfabeto
-
-# get ocorrencias da data
 
 
 def checkfiles(PATH1, PATH2):
