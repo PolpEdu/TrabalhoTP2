@@ -26,6 +26,5 @@ def lzwHuffmandec(file):
                              file.split(".")[0]+".LZWhuffData", "rb").read())
 
     strdecompressed = LZW.decompress(data)
-    lenght = len(strdecompressed)
     LZW.writeoutputDECtofile(
         "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, strdecompressed)

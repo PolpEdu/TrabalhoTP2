@@ -4,20 +4,19 @@ from struct import *
 import sys
 
 
-def writetofile(name, sequence):
-    output_file = open(name, "wb")
-    for data in sequence:
-
-        # B para ser 1 bytes, não vou usar int (>H) para não gastar espaço desnecessário
-        print(data)
-        if data > 255:
-            print("Error: data > 255")
-            sys.exit(1)
-
-        output_file.write(pack('>B', data))
-
-    output_file.close()
+def writetofileENC(name, sequence):
+    with open(name, "wb") as f:
+        for i in range(0, len(sequence)):
+            f.write(pack('>B', sequence[i]))
+        f.close()
     return len(sequence)
+
+
+def writetofileDEC(name, decoded):
+    output_file = open(name, "wb")
+    # escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
+    output_file.write(bytearray(decoded.encode()))
+    output_file.close()
 
 
 def move2front_encode(strng, symboltable):
@@ -26,12 +25,11 @@ def move2front_encode(strng, symboltable):
         indx = pad.index(char)
         sequence.append(indx)
         pad = [pad.pop(indx)] + pad
-
     return sequence
 
 
 def readfile(name):
-    input_file = open("./encoded/"+name.split(".")[0] + ".mtf", "rb")
+    input_file = open(name, "rb")
     sequence = []
     while True:
         data = input_file.read(1)
@@ -41,24 +39,13 @@ def readfile(name):
     return sequence
 
 
-def outputfile(name):
-    output_file = open(name, "wb")
-    # escrever em binario não como "w" texto, se for como texto deve escrever alguns metadados indesejados
-    output_file.write(bytearray(decoded.encode()))
-    output_file.close()
-
-
 def move2front_decode(sequence, symboltable):
-
     chars, pad = [], symboltable[::]
     for indx in sequence:
         char = pad[indx]
         chars.append(char)
         pad = [pad.pop(indx)] + pad
-
-    decoded = "".join(chars)
-
-    return decoded
+    return ''.join(chars)
 
 
 if __name__ == '__main__':
