@@ -4,17 +4,14 @@ from DataInfo import *
 import time
 import sys
 
-import compressionmethods.RLE as RLE
 import compressionmethods.MTF.MoveToFront as MTF
 import compressionmethods.LZW.LZW as LZW
 import compressionmethods.HuffmanCODEC.huffmancodec as hf
 import compressionmethods.BWT.Burrows_Wheeler as BWT
-import compressionmethods.RLE.RLE as RLE
 import compressionmethods.LZWHUFFMAN.lzwhuffman as LZWHUF
-import compressionmethods.BWTRLE.encode as BWTRLEENC
-import compressionmethods.BWTRLE.decode as BWTRLEDEC
 import compressionmethods.MTFHUFF.MTFHUFFMAN as MTFHUFF
 import compressionmethods.BZIP2.BZIP2 as BZIP2
+import compressionmethods.MTFDELTANEC.MTFDELT as MTFDE
 
 FILES = ["bible.txt", "finance.csv", "jquery-3.6.0.js", "random.txt"]
 
@@ -41,24 +38,28 @@ def main():
         # limite mínimo teórico para o número médio de bits por símbolo NORMAL
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
-
         #
         #
         #
         #
-        # Move to front
+        # MTF+DELTA
         start = time.time()
-        mtfencoded = MTF.move2front_encode(data, alfabeto)
-        compressedfilesize = MTF.writetofileENC(
-            "./encoded/"+file.split(".")[0] + ".mtf", mtfencoded)
+        mtfencoded = MTFDE.encode(data, alfabeto)
+        MTFDE.writetofile(
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta", mtfencoded)
         end = time.time()
-        print(f"MTF encode: {end-start:.5f} segundos")
+        print(f"MTF+DELTA encode: {end-start:.5f} segundos")
 
-        readfromfile = MTF.readfile("./encoded/"+file.split(".")[0] + ".mtf")
-        mtfdecoded = MTF.move2front_decode(readfromfile, alfabeto)
-        filesize = MTF.writetofileDEC("./decoded/decodedMTF"+file, mtfdecoded)
+        readfromfile = MTFDE.readfile(
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta")
+        mtfdecoded = MTFDE.decode(readfromfile, alfabeto)
+        filesize = MTFDE.writeoriginal(
+            "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, mtfdecoded)
         end = time.time()
-        print(f"MTF decode: {end-start:.5f} segundos")
+        print(f"MTF+DELTA decode: {end-start:.5f} segundos")
+
+        compressedfilesize = os.stat(
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta").st_size
 
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         DataInfo.printinfo(tamanhooriginal, filesize,
@@ -72,11 +73,13 @@ def main():
         #
         # HUFFMAN CODEC - COMPRIMIR PAR AUM FICHEIRO (A BIT STREAM DATA) e depois ver quanto é q ele ocupa.
         start = time.time()
-        hf.Huffman_encode(data, file)
+        [symbols, lenght] = hf.Huffman_encode(data, file)
+        symbols = symbols[1:]  # remove EOF
         end = time.time()
         print(f"HUFFMAN encode: {end-start:.5f}s")
         hf.Huffman_decode(file)
         end = time.time()
+        print(f"HUFFMAN decode: {end-start:.5f} segundos")
 
         tablesize = os.stat(
             './encoded/'+file.split(".")[0]+'.huffTable').st_size
@@ -85,15 +88,14 @@ def main():
 
         compressedfilesize = tablesize+huffdata
 
-        print(f"HUFFMAN decode: {end-start:.5f} segundos")
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
+
+        filesize = os.stat('./decoded/decodedHuffman'+file).st_size
+
         DataInfo.printinfo(tamanhooriginal, filesize,
                            compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
-
-        # print(
-        #    f"Número médio de bits de {file} com codificação de Huffman: {DataInfo.nrmediobitsHuffman(length, symbols, ocorrencias, alfabeto):.5f} bits/simbolo")
 
         #
         #
@@ -125,9 +127,6 @@ def main():
 
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
 
-        # print(
-        #    f"Número médio de bits de {file} com codificação LZW: {DataInfo.bitssimbolo(len(dictionary)):.5f} bits/simbolo")
-
         BLOCKSIZE = 100
         start = time.time()
         encoded_BWT = BWT.encode(data, BLOCKSIZE)
@@ -141,42 +140,13 @@ def main():
             "./decoded/decodedBWT"+file, decoded_BWT)
         end = time.time()
         print(f"BWT decode: {end-start:.5f} segundos")
+
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
         DataInfo.printinfo(tamanhooriginal, filesize,
                            compressedfilesize, compressionrate)
+
         checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
-        '''
-        #
-        #
-        #
-        #
-        # RLE CODEC
-        start = time.time()
-        encoding_RLE = RLE.compressRLE(data)
-        # print(encoding_RLE)
-        RLE.writetofileENC(file, encoding_RLE)
-        end = time.time()
-        print(f"RLE encode: {end-start:.5f} segundos")
 
-        rle_encoded = RLE.readfromfile("./encoded/"+file.split(".")[0]+".rle")
-        decoded_RLE = RLE.decompressRLE(rle_encoded)
-        RLE.writetofileDEC(file, decoded_RLE)
-        end = time.time()
-        print(f"RLE decode: {end-start:.5f} segundos")
-
-        compressedfilesize = os.stat(
-            './encoded/'+file.split(".")[0]+'.rle').st_size
-
-        filesize = os.stat('./decoded/decodedRLE'+file).st_size
-
-        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-
-        DataInfo.printinfo(tamanhooriginal, filesize,
-                           compressedfilesize, compressionrate)
-
-        checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
-'''
-        #
         #
         #
         #
@@ -288,7 +258,7 @@ def main():
         encoded = BZIP2.compress(data)
         end = time.time()
 
-        BZIP2.writetofileENC(
+        BZIP2.writetofile(
             "./compressionmethods/BZIP2/"+file.split(".")[0]+".bzip2", encoded)
 
         print(f"ENCODE BZIP2: {end-start:.5f} segundos")

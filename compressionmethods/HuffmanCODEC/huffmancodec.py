@@ -7,7 +7,7 @@ import logging
 import pickle
 from pathlib import Path
 from typing import Union, Any
-
+from DataInfo import *
 _log = logging.getLogger(__name__)
 
 
@@ -327,6 +327,8 @@ def Huffman_encode(data, file_name):
     output_file = open("./encoded/"+file_name.split(".")[0]+".huffData", "wb")
     output_file.write(bytes_encoded)
     output_file.close()
+
+    return symbols, length
 
 
 def Huffman_decode(file):

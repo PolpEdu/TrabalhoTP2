@@ -6,6 +6,15 @@ import os
 
 
 class DataInfo:
+    def calculaalfabeto(data):
+        # calcular o alfabeto ideal  com virgulas e pontos finais e letras do alfabeto grego normais.
+        alfabeto = []
+        for x in data:
+            if x not in alfabeto:
+                alfabeto.append(x)
+        alfabeto.sort()
+        return alfabeto
+
     def readfiledata(filename):
         PATH = os.getcwd()+"\\dataset\\" + filename
 
@@ -18,12 +27,7 @@ class DataInfo:
 
             f.close()
 
-        # calcular o alfabeto ideal  com virgulas e pontos finais e letras do alfabeto grego normais.
-        alfabeto = []
-        for x in data:
-            if x not in alfabeto:
-                alfabeto.append(x)
-        alfabeto.sort()
+        alfabeto = DataInfo.calculaalfabeto(data)
         return data, alfabeto
 
     def printinfo(tamanhooriginal, filesize, compressedfilesize, compressionrate):
@@ -49,18 +53,15 @@ class DataInfo:
         for x in range(len(symbols)):
             # contagens da media normal
             numerador += length[x] * novasocoreencias[x]
-
         denominador = np.sum(novasocoreencias)
-
-        E = numerador / denominador
-
-        return E
+        return numerador / denominador
 
     def get_ocorrencias(data, alfabeto):
         # print(data)
         ocorrencias = np.zeros(len(alfabeto))
         for x in data:
             ocorrencias[alfabeto.index(x)] += 1
+
         return ocorrencias
 
     def entropia(ocorrencias):
