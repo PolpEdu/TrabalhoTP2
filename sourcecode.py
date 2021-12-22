@@ -38,35 +38,6 @@ def main():
         # limite mínimo teórico para o número médio de bits por símbolo NORMAL
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
-        #
-        #
-        #
-        #
-        # MTF+DELTA
-        start = time.time()
-        compressed = MTFDE.encode(data, alfabeto)
-        MTFDE.writetofile(
-            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta", compressed)
-        end = time.time()
-        print(f"MTF+DELTA encode: {end-start:.5f} segundos")
-
-        readfromfile = MTFDE.readfile(
-            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta")
-        mtfdecoded = MTFDE.decode(readfromfile, alfabeto)
-        filesize = MTFDE.writeoriginal(
-            "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, mtfdecoded)
-        end = time.time()
-        print(f"MTF+DELTA decode: {end-start:.5f} segundos")
-
-        compressedfilesize = os.stat(
-            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta").st_size
-
-        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-        DataInfo.printinfo(tamanhooriginal, filesize,
-                           compressedfilesize, compressionrate)
-
-        checkfiles(
-            "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, "./dataset/"+file)
 
         #
         #
@@ -128,6 +99,36 @@ def main():
 
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
 
+        #
+        #
+        #
+        #
+        # MTF+DELTA
+        start = time.time()
+        compressed = MTFDE.encode(data, alfabeto)
+        MTFDE.writetofile(
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta", compressed)
+        end = time.time()
+        print(f"MTF+DELTA encode: {end-start:.5f} segundos")
+
+        readfromfile = MTFDE.readfile(
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta")
+        mtfdecoded = MTFDE.decode(readfromfile, alfabeto)
+        filesize = MTFDE.writeoriginal(
+            "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, mtfdecoded)
+        end = time.time()
+        print(f"MTF+DELTA decode: {end-start:.5f} segundos")
+
+        compressedfilesize = os.stat(
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta").st_size
+
+        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
+        DataInfo.printinfo(tamanhooriginal, filesize,
+                           compressedfilesize, compressionrate)
+
+        checkfiles(
+            "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, "./dataset/"+file)
+        '''
         BLOCKSIZE = 100
         start = time.time()
         encoded_BWT = BWT.encode(data, BLOCKSIZE)
@@ -147,7 +148,7 @@ def main():
                            compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
-
+        '''
         #
         #
         #

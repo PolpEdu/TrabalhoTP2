@@ -3,7 +3,7 @@ from compressionmethods.HuffmanCODEC.huffmancodec import *
 
 
 def lzwHuffmanenc(file_name, data, MAX_WIDTH):
-    compressed_data_LZW = LZW.compress(file_name, data, MAX_WIDTH)
+    compressed_data_LZW = LZW.compress(data, MAX_WIDTH)
 
     codec = HuffmanCodec.from_data(compressed_data_LZW)
     symbols, length = codec.get_code_len()
