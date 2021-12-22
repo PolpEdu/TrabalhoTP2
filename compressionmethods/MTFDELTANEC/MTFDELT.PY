@@ -12,7 +12,10 @@ def decode(enc, alf):
 
 
 def delta_dec(l):
-    return [l[i] + l[i - 1] for i in range(len(l) - 1, 0, -1)]
+    new_l = [l[0]]
+    for x in range(1, len(l)):
+        new_l.append(l[x] + new_l[x - 1])
+    return new_l
 
 
 def delta_enc(l):

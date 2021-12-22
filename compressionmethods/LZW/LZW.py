@@ -18,7 +18,7 @@ def writetofile(compressed_data, name):
     output_file.close()
 
 
-def compress(name, data, code_width):
+def compress(data, code_width):
     maximum_table_size = pow(2, int(code_width))
 
     # Building and initializing the dictionary.

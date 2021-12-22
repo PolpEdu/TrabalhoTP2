@@ -44,9 +44,9 @@ def main():
         #
         # MTF+DELTA
         start = time.time()
-        mtfencoded = MTFDE.encode(data, alfabeto)
+        compressed = MTFDE.encode(data, alfabeto)
         MTFDE.writetofile(
-            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta", mtfencoded)
+            "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta", compressed)
         end = time.time()
         print(f"MTF+DELTA encode: {end-start:.5f} segundos")
 
@@ -65,7 +65,8 @@ def main():
         DataInfo.printinfo(tamanhooriginal, filesize,
                            compressedfilesize, compressionrate)
 
-        checkfiles("./decoded/decodedMTF"+file, "./dataset/"+file)
+        checkfiles(
+            "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, "./dataset/"+file)
 
         #
         #
@@ -105,7 +106,7 @@ def main():
         # LZW CODEC
         MAX_WIDTH = 15  # para termos o maior nr de blocos
         start = time.time()
-        compressed_data = LZW.compress(file, data, MAX_WIDTH)
+        compressed_data = LZW.compress(data, MAX_WIDTH)
         LZW.writetofile(compressed_data, file)
         end = time.time()
         print(f"LZW encode: {end-start:.5f} segundos")
@@ -177,42 +178,7 @@ def main():
 
         checkfiles(
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
-        #
-        #
-        #
-        #
-        #
-        #
-        # BWT+RLE
-        BLOCKSIZE = 100
-        start = time.time()
-        encoded = BWTRLEENC.bwt_rle(
-            "./compressionmethods/BWTRLE/"+file.split(".")[0]+".bwtrle", data, BLOCKSIZE)
 
-        end = time.time()
-        print(f"ENCODE BWT+RLE: {end-start:.5f} segundos")
-
-        decoded = BWTRLEDEC.decode("./compressionmethods/BWTRLE/" +
-                                   file.split(".")[0]+".bwtrle", BLOCKSIZE)
-        BWTRLEDEC.writetofile(
-            "./compressionmethods/BWTRLE/decodedBWTRLE"+file, decoded)
-        end = time.time()
-        print(f"DECODE BWT+RLE: {end-start:.5f} segundos")
-
-        compressedfilesize = os.stat(
-            "./compressionmethods/BWTRLE/" +
-            file.split(".")[0]+".bwtrle").st_size
-
-        filesize = os.stat(
-            "./compressionmethods/BWTRLE/decodedBWTRLE"+file).st_size
-
-        compressionrate = calcrate(tamanhooriginal, compressedfilesize)
-
-        DataInfo.printinfo(tamanhooriginal, filesize,
-                           compressedfilesize, compressionrate)
-
-        checkfiles(
-            "./compressionmethods/BWTRLE/decodedBWTRLE"+file, "./dataset/"+file)
         #
         #
         #
