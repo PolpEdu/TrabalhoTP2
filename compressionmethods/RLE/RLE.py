@@ -62,6 +62,17 @@ def compressRLE(data):
         return encoding
 
 
-def decompressRLE(our_message):
-    return sub(r'(\d+)(\D)', lambda m: m.group(2) * int(m.group(1)),
-               our_message)  # regular expression to find the count and
+def decompressRLE(s):
+    decoded = ""
+    number = ""
+    for x in range(0, len(s)):
+        if s[x].isdigit():
+            number += str(s[x])
+            continue
+        else:
+            if number == "" or type(number) == "str":
+                continue
+            number = int(number)
+            decoded += s[x] * number
+            number = ""
+    return decoded

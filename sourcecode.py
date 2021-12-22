@@ -25,10 +25,10 @@ def main():
 
         print("Nome: "+file)
         data, alfabeto = DataInfo.readfiledata(file)
-        
+
         tamanhooriginal = os.stat(
             './dataset/'+file).st_size
-        '''
+
         print("Tamanho data: "+str(tamanhooriginal) +
               " bytes, tamanho alfabeto: "+str(len(alfabeto)))
 
@@ -145,6 +145,7 @@ def main():
         DataInfo.printinfo(tamanhooriginal, filesize,
                            compressedfilesize, compressionrate)
         checkfiles("./decoded/decodedBWT"+file, "./dataset/"+file)
+        '''
         #
         #
         #
@@ -174,7 +175,7 @@ def main():
                            compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedRLE"+file, "./dataset/"+file)
-
+'''
         #
         #
         #
@@ -206,7 +207,6 @@ def main():
 
         checkfiles(
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
-        '''
         #
         #
         #
@@ -236,8 +236,6 @@ def main():
         filesize = os.stat(
             "./compressionmethods/BWTRLE/decodedBWTRLE"+file).st_size
 
-
-        
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
 
         DataInfo.printinfo(tamanhooriginal, filesize,

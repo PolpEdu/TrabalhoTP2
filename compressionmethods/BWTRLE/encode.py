@@ -1,6 +1,7 @@
 import sys
 from itertools import groupby
-import compressionmethods.BWT.BWTSRC as bw
+import compressionmethods.BWT.Burrows_Wheeler as BWT
+
 import math as m
 
 
@@ -9,18 +10,10 @@ def rle_encode(input_string):
 
 
 def bwt_rle(write, data, BLOCKSIZE):
+
+    encoded_BWT = BWT.encode(data, BLOCKSIZE)
+    encoded_RLE = rle_encode(encoded_BWT)
+
     with open(write, "w") as f:
-        f.close
-
-    numero = m.ceil(len(data)/BLOCKSIZE)
-    for i in range(numero):
-        part_of_string = data[i*(BLOCKSIZE+1):((i+1)*(BLOCKSIZE+1))]
-
-        if(part_of_string != ""):
-            transform = bw.transform(part_of_string)
-            new_data = rle_encode(transform)
-            with open(write, "a+") as f:
-                for n in new_data:
-                    f.write(str(n))
-        else:
-            break
+        f.write(encoded_RLE)
+        f.close()

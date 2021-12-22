@@ -1,5 +1,5 @@
 from re import sub
-import compressionmethods.BWT.BWTSRC as BWTSRC
+import compressionmethods.BWT.Burrows_Wheeler as BWT
 import math as m
 
 
@@ -13,16 +13,9 @@ def decode(fname, BLOCKSIZE):
     file = open(fname, "r")
     texto = file.readlines()
     data = ''.join(texto)
-    totalstring = ""
 
-    numero = m.ceil(len(data)/BLOCKSIZE)
-    for i in range(numero):
-        part_of_string = data[i*(BLOCKSIZE+1):((i+1)*(BLOCKSIZE+1))]
-
-        stringtoinvert = rle_decode(part_of_string)
-        new_data = BWTSRC.inverse(stringtoinvert)
-        totalstring += str(new_data)
-
+    data = rle_decode(data)
+    totalstring = BWT.decode(data, BLOCKSIZE)
     return totalstring
 
 
@@ -34,7 +27,7 @@ def rle_decode(s):
             number += str(s[x])
             continue
         else:
-            if number == "":
+            if number == "" or type(number) == "str":
                 continue
             number = int(number)
             decoded += s[x] * number
