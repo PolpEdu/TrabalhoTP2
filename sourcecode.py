@@ -25,10 +25,10 @@ def main():
 
         print("Nome: "+file)
         data, alfabeto = DataInfo.readfiledata(file)
-
+        
         tamanhooriginal = os.stat(
             './dataset/'+file).st_size
-
+        '''
         print("Tamanho data: "+str(tamanhooriginal) +
               " bytes, tamanho alfabeto: "+str(len(alfabeto)))
 
@@ -41,7 +41,7 @@ def main():
         # limite mínimo teórico para o número médio de bits por símbolo NORMAL
         print(
             f"Entropia de {file}: {DataInfo.entropia(ocorrencias):.5f} bits/simbolo")
-        '''
+
         #
         #
         #
@@ -214,15 +214,16 @@ def main():
         #
         #
         # BWT+RLE
+        BLOCKSIZE = 100
         start = time.time()
         encoded = BWTRLEENC.bwt_rle(
-            "./compressionmethods/BWTRLE/"+file.split(".")[0]+".bwtrle", data)
+            "./compressionmethods/BWTRLE/"+file.split(".")[0]+".bwtrle", data, BLOCKSIZE)
 
         end = time.time()
         print(f"ENCODE BWT+RLE: {end-start:.5f} segundos")
 
         decoded = BWTRLEDEC.decode("./compressionmethods/BWTRLE/" +
-                                   file.split(".")[0]+".bwtrle", BWTRLEDEC)
+                                   file.split(".")[0]+".bwtrle", BLOCKSIZE)
         BWTRLEDEC.writetofile(
             "./compressionmethods/BWTRLE/decodedBWTRLE"+file, decoded)
         end = time.time()
@@ -235,6 +236,8 @@ def main():
         filesize = os.stat(
             "./compressionmethods/BWTRLE/decodedBWTRLE"+file).st_size
 
+
+        
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
 
         DataInfo.printinfo(tamanhooriginal, filesize,
