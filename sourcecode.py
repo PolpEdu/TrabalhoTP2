@@ -13,13 +13,24 @@ import compressionmethods.MTFHUFF.MTFHUFFMAN as MTFHUFF
 import compressionmethods.BZIP2.BZIP2 as BZIP2
 import compressionmethods.MTFDELTANEC.MTFDELT as MTFDE
 
+import matplotlib.pyplot as plt
+
 FILES = ["bible.txt", "finance.csv", "jquery-3.6.0.js", "random.txt"]
 
 
 def main():
+    huffman = []
+    lzw = []
+    lzwhuffman = []
+    mtfhuffman = []
+    bzip2 = []
+    mtfdeltenc = []
+
     # escrever os dados num arquivo byte-wise
     for file in FILES:
-
+        size = []
+        timescomp = []
+        timesdecomp = []
         print("Nome: "+file)
         data, alfabeto = DataInfo.readfiledata(file)
 
@@ -30,7 +41,7 @@ def main():
               " bytes, tamanho alfabeto: "+str(len(alfabeto)))
 
         ocorrencias = DataInfo.get_ocorrencias(data, alfabeto)
-        # criarhist(ocorrencias, alfabeto)
+        #DataInfo.criarhist(ocorrencias, alfabeto)
 
         print(
             f"No pior dos casos codificavamos {file} com: {DataInfo.bitssimbolo(len(alfabeto)):.5f} bits/simbolo")
@@ -48,10 +59,13 @@ def main():
         [symbols, lenght] = hf.Huffman_encode(data, file)
         symbols = symbols[1:]  # remove EOF
         end = time.time()
-        print(f"HUFFMAN encode: {end-start:.5f}s")
+        print(f"HUFFMAN encode: {end-start:.5f} segundos")
+        timescomp.append(end-start)
+
         hf.Huffman_decode(file)
         end = time.time()
         print(f"HUFFMAN decode: {end-start:.5f} segundos")
+        timesdecomp.append(end-start)
 
         tablesize = os.stat(
             './encoded/'+file.split(".")[0]+'.huffTable').st_size
@@ -59,7 +73,6 @@ def main():
         huffdata = os.stat('./encoded/'+file.split(".")[0]+'.huffData').st_size
 
         compressedfilesize = tablesize+huffdata
-
         compressionrate = calcrate(tamanhooriginal, compressedfilesize)
 
         filesize = os.stat('./decoded/decodedHuffman'+file).st_size
@@ -68,6 +81,8 @@ def main():
                            compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedHuffman"+file, "./dataset/"+file)
+
+        size.append(compressedfilesize)
 
         #
         #
@@ -80,12 +95,14 @@ def main():
         compressed_data = LZW.compress(data, MAX_WIDTH)
         LZW.writetofile(compressed_data, file)
         end = time.time()
+        timescomp.append(end-start)
         print(f"LZW encode: {end-start:.5f} segundos")
 
         readcompressed_LZW_data = LZW.readfromfile(file)
         decoded = LZW.decompress(readcompressed_LZW_data)
         LZW.writeoutputDECtofile("./decoded/decodedLZW"+file, decoded)
         end = time.time()
+        timesdecomp.append(end-start)
         print(f"LZW decode: {end-start:.5f} segundos")
 
         compressedfilesize = os.stat(
@@ -98,6 +115,7 @@ def main():
                            compressedfilesize, compressionrate)
 
         checkfiles("./decoded/decodedLZW"+file, "./dataset/"+file)
+        size.append(compressedfilesize)
 
         #
         #
@@ -109,6 +127,7 @@ def main():
         MTFDE.writetofile(
             "./compressionmethods/MTFDELTANEC/"+file.split(".")[0] + ".mtfdelta", compressed)
         end = time.time()
+        timescomp.append(end-start)
         print(f"MTF+DELTA encode: {end-start:.5f} segundos")
 
         readfromfile = MTFDE.readfile(
@@ -117,6 +136,7 @@ def main():
         filesize = MTFDE.writeoriginal(
             "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, mtfdecoded)
         end = time.time()
+        timesdecomp.append(end-start)
         print(f"MTF+DELTA decode: {end-start:.5f} segundos")
 
         compressedfilesize = os.stat(
@@ -128,6 +148,8 @@ def main():
 
         checkfiles(
             "./compressionmethods/MTFDELTANEC/decodedMTFDELTANEC"+file, "./dataset/"+file)
+
+        size.append(compressedfilesize)
         '''
         BLOCKSIZE = 100
         start = time.time()
@@ -160,9 +182,11 @@ def main():
         start = time.time()
         LZWHUF.lzwHuffmanenc(file, data, MAX_WIDTH)
         end = time.time()
+        timescomp.append(end-start)
         print(f"ENCODE LZW+HUFFMAN: {end-start:.5f} segundos")
         LZWHUF.lzwHuffmandec(file)
         end = time.time()
+        timesdecomp.append(end-start)
         print(f"DECODE: LZW+HUFFMAN: {end-start:.5f} segundos")
         compressedfilesize = os.stat(
             "./compressionmethods/LZWHUFFMAN/" +
@@ -179,6 +203,7 @@ def main():
 
         checkfiles(
             "./compressionmethods/LZWHUFFMAN/decodedLZWHUFFMAN"+file, "./dataset/"+file)
+        size.append(compressedfilesize)
 
         #
         #
@@ -190,9 +215,11 @@ def main():
         start = time.time()
         MTFHUFF.encodemtfhuff(file, data, alfabeto)
         end = time.time()
+        timescomp.append(end-start)
         print(f"ENCODE MTF+HUFF: {end-start:.5f} segundos")
         MTFHUFF.decodemtfhuff(file, alfabeto)
         end = time.time()
+        timesdecomp.append(end-start)
         print(f"DECODE MTF+HUFF: {end-start:.5f} segundos")
 
         compressedfilesize = os.stat(
@@ -211,19 +238,20 @@ def main():
 
         checkfiles(
             "./compressionmethods/MTFHUFF/decodedMTFHUFF"+file, "./dataset/"+file)
-
+        size.append(compressedfilesize)
         #
         #
         #
         #
         # BZIP2
+        start = time.time()
         with open("./dataset/"+file, "rb") as fh:
             data = fh.read()
         fh.close()  # read data in binary
 
-        start = time.time()
         encoded = BZIP2.compress(data)
         end = time.time()
+        timescomp.append(end-start)
 
         BZIP2.writetofile(
             "./compressionmethods/BZIP2/"+file.split(".")[0]+".bzip2", encoded)
@@ -232,6 +260,7 @@ def main():
 
         decoded = BZIP2.decompress(encoded)
         end = time.time()
+        timesdecomp.append(end-start)
 
         BZIP2.writetofile(
             "./compressionmethods/BZIP2/decodedBZIP2"+file, decoded)
@@ -246,6 +275,55 @@ def main():
 
         DataInfo.printinfo(tamanhooriginal, filesize,
                            compressedfilesize, compressionrate)
+
+        checkfiles(
+            "./compressionmethods/BZIP2/decodedBZIP2"+file, "./dataset/"+file)
+        size.append(compressedfilesize)
+
+        dtimescomp = {}
+        dtimescomp[file] = timescomp
+
+        dtimesdecomp = {}
+        dtimesdecomp[file] = timesdecomp
+
+        dsize = {}
+        dsize[file] = size
+
+    graficobarras(dtimescomp, "tempo de compressão")
+    graficobarras(dtimesdecomp, "tempo de decompressão")
+    graficobarras(dsize, "tamanho")
+
+
+def graficobarras(d, tipo):
+    barWidth = 0.10
+
+    plt.figure(figsize=(10, 5))
+
+    plt.xlabel('Ficheiros')
+
+    r1 = np.arange(len(FILES))
+    r2 = [x + barWidth for x in r1]
+    r3 = [x + barWidth for x in r2]
+    r4 = [x + barWidth for x in r3]
+    r5 = [x + barWidth for x in r4]
+
+    print(d)
+    plt.bar(r1, d[file][0], color='red',
+            width=barWidth, label='HUFFMAN')
+    plt.bar(r2, d[file][1], color='orange',
+            width=barWidth, label='LZW')
+    plt.bar(r3, d[file][2], color='yellow',
+            width=barWidth, label='MTF+DELTA ENCODING')
+    plt.bar(r4, d[file][3], color='green',
+            width=barWidth, label='LZW+HUFFMAN')
+    plt.bar(r5, d[file][4], color='blue',
+            width=barWidth, label='BZIP2')
+
+    plt.ylabel(tipo)
+    plt.title("Representação do " + tipo + " para os métodos envolvidos")
+    plt.xticks(range(len(FILES)), FILES)
+    plt.legend()
+    plt.show()
 
 
 def calcrate(originalfilesize, compressedfilesize):
