@@ -26,6 +26,10 @@ def main():
     bzip2 = []
     mtfdeltenc = []
 
+    dtimescomp = {}
+    dtimesdecomp = {}
+    dsize = {}
+
     # escrever os dados num arquivo byte-wise
     for file in FILES:
         size = []
@@ -280,18 +284,15 @@ def main():
             "./compressionmethods/BZIP2/decodedBZIP2"+file, "./dataset/"+file)
         size.append(compressedfilesize)
 
-        dtimescomp = {}
         dtimescomp[file] = timescomp
 
-        dtimesdecomp = {}
         dtimesdecomp[file] = timesdecomp
 
-        dsize = {}
         dsize[file] = size
 
-    graficobarras(dtimescomp, "tempo de compressão")
-    graficobarras(dtimesdecomp, "tempo de decompressão")
-    graficobarras(dsize, "tamanho")
+    graficobarras(dtimescomp, "tempo de compressão (s)")
+    graficobarras(dtimesdecomp, "tempo de decompressão (s)")
+    graficobarras(dsize, "tamanho (B)")
 
 
 def graficobarras(d, tipo):
@@ -306,17 +307,37 @@ def graficobarras(d, tipo):
     r3 = [x + barWidth for x in r2]
     r4 = [x + barWidth for x in r3]
     r5 = [x + barWidth for x in r4]
+    r6 = [x + barWidth for x in r5]
 
-    print(d)
-    plt.bar(r1, d[file][0], color='red',
+    # print(d)
+
+    HUFFMANLIST = []
+    LZWLIST = []
+    DELTAENCLIST = []
+    LZWHUFFMANLIST = []
+    MTFHUFLIST = []
+    BZIP2LIST = []
+    sizes = []
+
+    for file in FILES:
+        HUFFMANLIST.append(d[file][0])
+        LZWLIST.append(d[file][1])
+        DELTAENCLIST.append(d[file][2])
+        LZWHUFFMANLIST.append(d[file][3])
+        MTFHUFLIST.append(d[file][4])
+        BZIP2LIST.append(d[file][5])
+
+    plt.bar(r1, HUFFMANLIST, color='red',
             width=barWidth, label='HUFFMAN')
-    plt.bar(r2, d[file][1], color='orange',
+    plt.bar(r2, LZWLIST, color='orange',
             width=barWidth, label='LZW')
-    plt.bar(r3, d[file][2], color='yellow',
+    plt.bar(r3, DELTAENCLIST, color='yellow',
             width=barWidth, label='MTF+DELTA ENCODING')
-    plt.bar(r4, d[file][3], color='green',
+    plt.bar(r4, LZWHUFFMANLIST, color='green',
             width=barWidth, label='LZW+HUFFMAN')
-    plt.bar(r5, d[file][4], color='blue',
+    plt.bar(r5, MTFHUFLIST, color='blue',
+            width=barWidth, label='MTF+HUFFMAN')
+    plt.bar(r6, BZIP2LIST, color='purple',
             width=barWidth, label='BZIP2')
 
     plt.ylabel(tipo)
