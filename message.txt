@@ -1,0 +1,243 @@
+Nome: bible.txt
+Tamanho data: 4077775 bytes, tamanho alfabeto: 63
+No pior dos casos codificavamos bible.txt com: 5.97728 bits/simbolo
+Entropia de bible.txt: 4.34275 bits/simbolo
+MTF+DELTA encode: 3.43007 segundos
+MTF+DELTA decode: 6.72503 segundos
+ Tamanho do ficheiro original: 4077775 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 4047392 bytes
+ Tamanho do ficheiro comprimido: 4047392 bytes
+ Taxa de compressão: 0.75 %
+
+Ficheiro descomprimido e original iguais
+
+
+HUFFMAN encode: 1.47646s
+HUFFMAN decode: 7.72618 segundos
+ Tamanho do ficheiro original: 4077775 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 4047392 bytes
+ Tamanho do ficheiro comprimido: 2219301 bytes
+ Taxa de compressão: 45.58 %
+
+Ficheiro descomprimido e original iguais
+
+
+LZW encode: 1.11526 segundos
+LZW decode: 2.88181 segundos
+ Tamanho do ficheiro original: 4077775 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 4047392 bytes
+ Tamanho do ficheiro comprimido: 1623544 bytes
+ Taxa de compressão: 60.19 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE LZW+HUFFMAN: 1.67338 segundos
+DECODE: LZW+HUFFMAN: 7.86825 segundos
+ Tamanho do ficheiro original: 4077775 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 4047392 bytes
+ Tamanho do ficheiro comprimido: 1680850 bytes
+ Taxa de compressão: 58.78 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE MTF+HUFF: 3.93389 segundos
+DECODE MTF+HUFF: 12.28547 segundos
+ Tamanho do ficheiro original: 4077775 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 4047392 bytes
+ Tamanho do ficheiro comprimido: 2424791 bytes
+ Taxa de compressão: 40.54 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE BZIP2: 0.33607 segundos
+DECODE BZIP2: 0.49011 segundos
+ Tamanho do ficheiro original: 4077775 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 4077775 bytes
+ Tamanho do ficheiro comprimido: 846238 bytes
+ Taxa de compressão: 79.25 %
+
+Nome: finance.csv
+Tamanho data: 5881081 bytes, tamanho alfabeto: 67
+No pior dos casos codificavamos finance.csv com: 6.06609 bits/simbolo
+Entropia de finance.csv: 5.15995 bits/simbolo
+MTF+DELTA encode: 5.99185 segundos
+MTF+DELTA decode: 11.30110 segundos
+ Tamanho do ficheiro original: 5881081 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 5844000 bytes
+ Tamanho do ficheiro comprimido: 5844000 bytes
+ Taxa de compressão: 0.63 %
+
+Ficheiro descomprimido e original iguais
+
+
+HUFFMAN encode: 2.26351s
+HUFFMAN decode: 13.33060 segundos
+ Tamanho do ficheiro original: 5881081 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 5844000 bytes
+ Tamanho do ficheiro comprimido: 3792043 bytes
+ Taxa de compressão: 35.52 %
+
+Ficheiro descomprimido e original iguais
+
+
+LZW encode: 1.62937 segundos
+LZW decode: 4.16694 segundos
+ Tamanho do ficheiro original: 5881081 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 5844000 bytes
+ Tamanho do ficheiro comprimido: 1546802 bytes
+ Taxa de compressão: 73.70 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE LZW+HUFFMAN: 2.24428 segundos
+DECODE: LZW+HUFFMAN: 9.93757 segundos
+ Tamanho do ficheiro original: 5881081 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 5844000 bytes
+ Tamanho do ficheiro comprimido: 1825368 bytes
+ Taxa de compressão: 68.96 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE MTF+HUFF: 6.66891 segundos
+DECODE MTF+HUFF: 20.88049 segundos
+ Tamanho do ficheiro original: 5881081 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 5844000 bytes
+ Tamanho do ficheiro comprimido: 4011148 bytes
+ Taxa de compressão: 31.80 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE BZIP2: 0.57729 segundos
+DECODE BZIP2: 0.69832 segundos
+ Tamanho do ficheiro original: 5881081 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 5881081 bytes
+ Tamanho do ficheiro comprimido: 189436 bytes
+ Taxa de compressão: 96.78 %
+
+Nome: jquery-3.6.0.js
+Tamanho data: 299461 bytes, tamanho alfabeto: 97
+No pior dos casos codificavamos jquery-3.6.0.js com: 6.59991 bits/simbolo
+Entropia de jquery-3.6.0.js: 5.06698 bits/simbolo
+MTF+DELTA encode: 0.37909 segundos
+MTF+DELTA decode: 0.74518 segundos
+ Tamanho do ficheiro original: 299461 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 288580 bytes
+ Tamanho do ficheiro comprimido: 288580 bytes
+ Taxa de compressão: 3.63 %
+
+Ficheiro descomprimido e original iguais
+
+
+HUFFMAN encode: 0.11139s
+HUFFMAN decode: 0.67551 segundos
+ Tamanho do ficheiro original: 299461 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 288580 bytes
+ Tamanho do ficheiro comprimido: 185168 bytes
+ Taxa de compressão: 38.17 %
+
+Ficheiro descomprimido e original iguais
+
+
+LZW encode: 0.09202 segundos
+LZW decode: 0.17304 segundos
+ Tamanho do ficheiro original: 299461 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 288580 bytes
+ Tamanho do ficheiro comprimido: 127652 bytes
+ Taxa de compressão: 57.37 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE LZW+HUFFMAN: 0.18304 segundos
+DECODE: LZW+HUFFMAN: 0.60815 segundos
+ Tamanho do ficheiro original: 299461 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 288580 bytes
+ Tamanho do ficheiro comprimido: 164447 bytes
+ Taxa de compressão: 45.09 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE MTF+HUFF: 0.36034 segundos
+DECODE MTF+HUFF: 1.11680 segundos
+ Tamanho do ficheiro original: 299461 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 288580 bytes
+ Tamanho do ficheiro comprimido: 195030 bytes
+ Taxa de compressão: 34.87 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE BZIP2: 0.02200 segundos
+DECODE BZIP2: 0.03301 segundos
+ Tamanho do ficheiro original: 299461 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 299461 bytes
+ Tamanho do ficheiro comprimido: 68706 bytes
+ Taxa de compressão: 77.06 %
+
+Nome: random.txt
+Tamanho data: 100000 bytes, tamanho alfabeto: 64
+No pior dos casos codificavamos random.txt com: 6.00000 bits/simbolo
+Entropia de random.txt: 5.99949 bits/simbolo
+MTF+DELTA encode: 0.10702 segundos
+MTF+DELTA decode: 0.23590 segundos
+ Tamanho do ficheiro original: 100000 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 100000 bytes
+ Tamanho do ficheiro comprimido: 100000 bytes
+ Taxa de compressão: 0.00 %
+
+Ficheiro descomprimido e original iguais
+
+
+HUFFMAN encode: 0.04400s
+HUFFMAN decode: 0.27705 segundos
+ Tamanho do ficheiro original: 100000 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 100000 bytes
+ Tamanho do ficheiro comprimido: 76006 bytes
+ Taxa de compressão: 23.99 %
+
+Ficheiro descomprimido e original iguais
+
+
+LZW encode: 0.08002 segundos
+LZW decode: 0.13604 segundos
+ Tamanho do ficheiro original: 100000 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 100000 bytes
+ Tamanho do ficheiro comprimido: 100758 bytes
+ Taxa de compressão: -0.76 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE LZW+HUFFMAN: 0.08602 segundos
+DECODE: LZW+HUFFMAN: 0.35208 segundos
+ Tamanho do ficheiro original: 100000 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 100000 bytes
+ Tamanho do ficheiro comprimido: 107965 bytes
+ Taxa de compressão: -7.96 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE MTF+HUFF: 0.12103 segundos
+DECODE MTF+HUFF: 0.35908 segundos
+ Tamanho do ficheiro original: 100000 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 100000 bytes
+ Tamanho do ficheiro comprimido: 75862 bytes
+ Taxa de compressão: 24.14 %
+
+Ficheiro descomprimido e original iguais
+
+
+ENCODE BZIP2: 0.00900 segundos
+DECODE BZIP2: 0.05301 segundos
+ Tamanho do ficheiro original: 100000 bytes
+ Tamanho do ficheiro apos a sua codificação e descodificação: 100000 bytes
+ Tamanho do ficheiro comprimido: 75684 bytes
+ Taxa de compressão: 24.32 %
