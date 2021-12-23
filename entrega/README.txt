@@ -1,0 +1,3 @@
+# TrabalhoTP2
+Para correr este programa, apenas corra o código "run.py".
+Se na mesma diretoria dele estiver o ficheiro "DataInfo.py", uma pasta chamada "dataset" com os ficheiros: "bible.txt", "finance.csv", "jquery-3.6.0.js" e "random.txt" e uma pasta com os diferentes metodos de compressão o ficheiro deve começar a comprimir todos os ficheiros do dataset e mete-los dentro de pastas chamadas "decoded" e "encoded"
